@@ -1,52 +1,52 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRef } from "react";
 import { Box, Button, Container, Input, Flex } from 'theme-ui'
-import { useRouter } from "next/navigation";
-import Link from 'next/link'
-import { signIn, signOut, useSession } from 'next-auth/react';
+import axios from 'axios';
+import { signIn } from 'next-auth/react';
 
 function Login() {
 
-    const userName = useRef("");
+    const email = useRef("");
     const pass = useRef("");
+    const [resp, setResp] = useState(null)
 
-    const onSubmit = async () => {
-        const result = await signIn("credentials", {
-            username: userName.current,
-            password: pass.current,
-            redirect: true,
-            callbackUrl: "/",
-        });
-    };
+    const handleSubmit = () => {
+
+        const data = { email: email, password: pass }
+        axios.post('/api/auth/register', data).then(
+            (res) => { console.log(res.message);console.log('asdasda') }
+        ).catch((e) => { console.log(e.message) })
+    }
+
     return (
         <Box sx={styles.registerForm}>
             <Box sx={{ fontSize: 24 }}>Discover Neighbors</Box>
             <Box sx={{ fontSize: 24, fontWeight: 600, color: 'blue' }}>with Quarter</Box>
 
-
-            <Box sx={styles.formContainer}>
+            <form>
+                <Box sx={styles.formContainer}>
+                    <br />
+                    <Input sx={styles.email} placeholder='Email address' type='email' className='placeholder:text-black h-12 ' onChange={(e) => (email.current = e.target.value)}></Input>
+                    <br />
+                    <Input sx={styles.email} placeholder='Password' type='password' className='placeholder:text-black h-12' onChange={(e) => (pass.current = e.target.value)}></Input>
+                    <br />
+                    <Button sx={styles.button} className="bg-gradient-to-r from-cyan-500 to-blue-500" onClick={handleSubmit}>Continue</Button>
+                    <br />
+                    <br />
+                    <Container sx={{ fontSize: 14, }}>
+                        <span>By signing up, you agree to our <a href='/privacy-policy' style={{ color: 'blue' }}>Privacy Policy</a>,
+                            <a href='/cookie-policy' style={{ color: 'blue' }}>Cookie Policy</a>,</span>
+                        <span> <a href='/member-agreement' style={{ color: 'blue' }}>Member Agreement</a>, and that we may share your personal</span><span> information with our partners to verify your account.</span>
+                    </Container>
+                </Box>
                 <br />
-                <Input sx={styles.email} placeholder='Email address' type='email' className='placeholder:text-black h-12 ' onChange={(e)=>(userName.current = e.target.value)}></Input>
                 <br />
-                <Input sx={styles.email} placeholder='Password' type='password' className='placeholder:text-black h-12' onChange={(e)=>(pass.current = e.target.value)}></Input>
-                <br />
-                <Button sx={styles.button} className="bg-gradient-to-r from-cyan-500 to-blue-500" onClick={onSubmit}>Continue</Button>
-                <br />
-                <br />
-                <Container sx={{ fontSize: 14, }}>
-                    <span>By signing up, you agree to our <a href='/privacy-policy' style={{ color: 'blue' }}>Privacy Policy</a>,
-                        <a href='/cookie-policy' style={{ color: 'blue' }}>Cookie Policy</a>,</span>
-                    <span> <a href='/member-agreement' style={{ color: 'blue' }}>Member Agreement</a>, and that we may share your personal</span><span> information with our partners to verify your account.</span>
-                </Container>
-            </Box>
-            <br />
-            <br />
-            <Flex sx={styles.login}>
-                Have an account? <span style={{ color: 'blue' }} onClick={()=>signIn()}>Login</span>
-            </Flex>
-
+                <Flex sx={styles.login}>
+                    Have an account? <span style={{ color: 'blue' }} onClick={() => signIn()}>Login</span>
+                </Flex>
+            </form>
 
         </Box>
     )

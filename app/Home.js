@@ -5,7 +5,7 @@ import Login from './Components/HomeRegister';
 function Home() {
     return (
 
-        <div className='b'>
+        <div>
             <Box sx={styles.header}></Box>
             <Box sx={styles.imageContainer}>
                 <Login/>

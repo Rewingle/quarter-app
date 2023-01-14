@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { jsx, Box, Container, MenuButton, Flex, Button, Image,} from 'theme-ui';
 import Sticky from 'react-stickynode'
 
+import { getProviders, signOut } from "next-auth/react"
 
 export default function Header() {
-
     const menuItems = [
         {
             path: 'https://storage.googleapis.com/lookal/home.png',
@@ -64,7 +64,7 @@ export default function Header() {
                                 </Box>
 
                             </Flex>
-                            <Box sx={styles.profile}>
+                            <Box sx={styles.profile} onClick={()=>{signOut()}}>
                                 profile
                             </Box>
                         </Box>
