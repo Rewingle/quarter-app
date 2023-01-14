@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRef } from "react";
 import { Box, Button, Container, Input, Flex } from 'theme-ui'
-import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
 function Login() {
@@ -12,14 +11,14 @@ function Login() {
     const pass = useRef("");
     const [resp, setResp] = useState(null)
 
-    const handleSubmit = () => {
+    /* const handleSubmit = () => {
 
         const data = { email: email, password: pass }
         axios.post('/api/auth/register', data).then(
             (res) => { console.log(res.message);console.log('asdasda') }
         ).catch((e) => { console.log(e.message) })
     }
-
+ */
     return (
         <Box sx={styles.registerForm}>
             <Box sx={{ fontSize: 24 }}>Discover Neighbors</Box>
@@ -32,7 +31,7 @@ function Login() {
                     <br />
                     <Input sx={styles.email} placeholder='Password' type='password' className='placeholder:text-black h-12' onChange={(e) => (pass.current = e.target.value)}></Input>
                     <br />
-                    <Button sx={styles.button} className="bg-gradient-to-r from-cyan-500 to-blue-500" onClick={handleSubmit}>Continue</Button>
+                    <Button sx={styles.button} className="bg-gradient-to-r from-cyan-500 to-blue-500">Continue</Button>
                     <br />
                     <br />
                     <Container sx={{ fontSize: 14, }}>
