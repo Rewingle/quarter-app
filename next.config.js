@@ -5,7 +5,8 @@ const nextConfig = {
     appDir: true
   },
   images:{
-    domains: ['storage.googleapis.com']
+    domains: ['storage.googleapis.com',
+              'https://quarter-app.vercel.app']
   }
 }
 

@@ -21,10 +21,6 @@ export default function Feed() {
         return "Loading or not authenticated..."
     }
 
-
-
-
-
     return (
         <React.Fragment>
             <Header></Header>

@@ -43,7 +43,7 @@ function Login() {
                 <br />
                 <br />
                 <Flex sx={styles.login}>
-                    Have an account? <span style={{ color: 'blue' }} onClick={() => signIn()}>Login</span>
+                    Have an account? <span style={{ color: 'blue','&:hover':{cursor:'pointer'} }} onClick={() => signIn()}>Login</span>
                 </Flex>
             </form>
 
@@ -63,7 +63,13 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         fontWeight: '600',
-        fontSize: 18
+        fontSize: 18,
+        '&:span':{
+            backgroundColor:'red', 
+            '&:hover':{
+                curser:'pointer'
+            }
+        }
     },
     button: {
         width: '100%',
