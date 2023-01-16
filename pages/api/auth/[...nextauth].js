@@ -36,8 +36,8 @@ export const authOptions = {
           return user;
         } else return null; */
         
-        if(username==='kul.mehmetali@yahoo.com' && password==='crazy324'){
-            return {username:'mali',password:'admin'}
+        if(username==='test@admin.com' && password==='test1234'){
+            return {username:'test',password:'test1234'}
         }else return null;
       },
     }),

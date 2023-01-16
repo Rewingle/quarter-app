@@ -22,7 +22,7 @@ function Login() {
     return (
         <Box sx={styles.registerForm}>
             <Box sx={{ fontSize: 24 }}>Discover Neighbors</Box>
-            <Box sx={{ fontSize: 24, fontWeight: 600, color: 'blue' }}>with Quarter</Box>
+            <Box sx={{ fontSize: 24, fontWeight: 600, color: '#2DD4BF' }}>with Quarter</Box>
 
             <form>
                 <Box sx={styles.formContainer}>
@@ -31,7 +31,7 @@ function Login() {
                     <br />
                     <Input sx={styles.email} placeholder='Password' type='password' className='placeholder:text-black h-12' onChange={(e) => (pass.current = e.target.value)}></Input>
                     <br />
-                    <Button sx={styles.button} className="bg-gradient-to-r from-cyan-500 to-blue-500">Continue</Button>
+                    <Button sx={styles.button} className="bg-gradient-to-r from-teal-400 to-cyan-500">Continue</Button>
                     <br />
                     <br />
                     <Container sx={{ fontSize: 14, }}>
@@ -42,11 +42,11 @@ function Login() {
                 </Box>
                 <br />
                 <br />
-                <Flex sx={styles.login}>
-                    Have an account? <span style={{ color: 'blue','&:hover':{cursor:'pointer'} }} onClick={() => signIn()}>Login</span>
-                </Flex>
-            </form>
 
+            </form>
+            <Flex sx={styles.login}>
+                Have an account? <Button sx={{ marginLeft: '0.6em', backgroundColor: '#2DD4BF', color: 'white' }} onClick={() => signIn()} className="bg-gradient-to-r from-teal-400 to-cyan-500">Login</Button>
+            </Flex>
         </Box>
     )
 }
@@ -60,14 +60,16 @@ const styles = {
 
     },
     login: {
+        width:'100%',
         justifyContent: 'center',
         alignItems: 'center',
         fontWeight: '600',
         fontSize: 18,
-        '&:span':{
-            backgroundColor:'red', 
-            '&:hover':{
-                curser:'pointer'
+        '& span': {
+
+            '&:hover': {
+                curser: 'pointer',
+
             }
         }
     },
@@ -81,11 +83,12 @@ const styles = {
         backgroundColor: 'white',
         height: ['100vh', null, null, '520px'],
         width: ['100vw', null, null, '420px'],
-        borderRadius: '16px',
+        borderRadius: ['0px', '0px', '0px', '16px'],
         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
         zIndex: 10,
 
-        p: 4
+        p: 4,
+        py: [5, 5, 5, 4, 4]
     },
 
 

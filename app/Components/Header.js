@@ -45,7 +45,7 @@ export default function Header() {
                     <Container>
                         <Box className='headerInner' sx={styles.headerInner}>
 
-                            <Image src='https://storage.googleapis.com/lookal/quartermini.png' alt="lookal logo" sx={styles.logoStyle} />
+                            <Image src='https://storage.googleapis.com/lookal/logomini.png' alt="lookal logo" sx={styles.logoStyle} />
 
                             <Flex
                                 as="nav"
@@ -162,7 +162,7 @@ const styles = {
         marginLeft: 'auto'
     },
     logoStyle: {
-        width: '6em',
+        width: '8em',
         ':hover': {
             cursor: 'pointer'
         }
