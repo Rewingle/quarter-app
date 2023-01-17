@@ -1,4 +1,4 @@
-![Alt text](https://storage.googleapis.com/lookal/quartermini.png "Quarter")
+![Alt text](https://storage.googleapis.com/lookal/logomini.png "Quarter")
 
 ## “Quarter” Social Media Web Application for discovering neighborhood
 
