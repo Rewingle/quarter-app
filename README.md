@@ -1,8 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![Alt text](https://storage.googleapis.com/lookal/logomini.png "Quarter")
 
-## Getting Started
+## “Quarter” Social Media Web Application for discovering neighborhood
 
-First, run the development server:
+T.C. Maltepe University
+Faculty of Engineering and Natural Sciences
+Computer Engineering Department
+
+Capstone Project 
+
+
+
+
+Running on localhost;
 
 ```bash
 npm run dev
@@ -20,17 +29,9 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Demo
+Current version of app that is deployed on Vercel.
 
-To learn more about Next.js, take a look at the following resources:
+https://quarter-app.vercel.app/
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
