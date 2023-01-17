@@ -11,8 +11,7 @@ Capstone Project
 
 
 
-
-First, run the development server:
+Running on localhost;
 
 ```bash
 npm run dev
