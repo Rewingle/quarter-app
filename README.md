@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![Alt text](url "https://storage.googleapis.com/lookal/quartermini.png")
 
 ## “Quarter” Social Media Web Application for discovering neighborhood
 
