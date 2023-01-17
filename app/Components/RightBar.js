@@ -6,8 +6,9 @@ function RightBar() {
             <Box sx={styles.rightBarContainer}>
                 <Container sx={styles.rightBarInner}>
                     <ul>
-                        <li><a></a></li>
-                        <li>adsasd</li>
+                        <li>-PEOPLE YOU MAY KNOW</li>
+                        <li>-ADS</li>
+                        <li>-SHOWCASE BANNER</li>
                     </ul>
 
                 </Container>

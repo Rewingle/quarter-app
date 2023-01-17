@@ -33,7 +33,12 @@ const LoginPage = () => {
                     <br/>
                     <Button sx={styles.button} className="bg-gradient-to-r from-cyan-500 to-blue-500" onClick={onSubmit}>Login</Button>
                     <br />
-                    <br />
+                    For testing use only; 
+                    <br/>
+                    Email: test@admin.com
+                    <br/>
+                    Password: test1234
+             
                     
                 </Box>
             </Box>

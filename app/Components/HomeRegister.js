@@ -9,7 +9,6 @@ function Login() {
 
     const email = useRef("");
     const pass = useRef("");
-    const [resp, setResp] = useState(null)
 
     /* const handleSubmit = () => {
 
@@ -60,7 +59,7 @@ const styles = {
 
     },
     login: {
-        width:'100%',
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         fontWeight: '600',

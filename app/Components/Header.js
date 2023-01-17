@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { jsx, Box, Container, MenuButton, Flex, Button, Image,} from 'theme-ui';
+import { jsx, Box, Container, MenuButton, Flex, Button, Image, } from 'theme-ui';
 import Sticky from 'react-stickynode'
 
 import { getProviders, signOut } from "next-auth/react"
@@ -44,9 +44,9 @@ export default function Header() {
                     className={mobileMenu ? 'is-mobile-menu' : ''}>
                     <Container>
                         <Box className='headerInner' sx={styles.headerInner}>
-
-                            <Image src='https://storage.googleapis.com/lookal/logomini.png' alt="lookal logo" sx={styles.logoStyle} />
-
+                            <a href=''>
+                                <Image src='https://storage.googleapis.com/lookal/logomini.png' alt="lookal logo" sx={styles.logoStyle} />
+                            </a>
                             <Flex
                                 as="nav"
                                 sx={styles.navbar}
@@ -58,14 +58,15 @@ export default function Header() {
                                 >
                                     {menuItems.map(({ path }, i) => (
                                         <li key={i}>
-                                            <a href={path}><Image src={path} sx={{ width: '32px', margin: '0px 40px', padding: 0 }}></Image></a>
+                                            <a href=''><Image src={path} sx={{ width: '32px', margin: '0px 40px', padding: 0 }}></Image></a>
                                         </li>
                                     ))}
                                 </Box>
 
                             </Flex>
-                            <Box sx={styles.profile} onClick={()=>{signOut()}}>
-                                profile
+                            <Box sx={styles.profile}>
+                                <Image src='https://storage.googleapis.com/lookal/mainuser.jpg' width='42' height='42' style={{ borderRadius: '50%', marginRight: '1em' }} />
+                                <Button onClick={() => { signOut() }} sx={{ backgroundColor: '#14B8A6' }}>Logout</Button>
                             </Box>
                         </Box>
 
@@ -159,7 +160,8 @@ const styles = {
         },
     },
     profile: {
-        marginLeft: 'auto'
+        marginLeft: 'auto',
+        display: 'flex'
     },
     logoStyle: {
         width: '8em',

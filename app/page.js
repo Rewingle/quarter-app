@@ -14,7 +14,7 @@ function Page() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
-    }, 500);
+    }, 400);
 
   }, []);
 
@@ -29,7 +29,7 @@ function Page() {
           session?.user ? <Feed />
             :
             <Home />
-          : <div></div>
+          : null
       }
 
 
