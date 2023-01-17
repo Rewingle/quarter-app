@@ -2,6 +2,16 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+T.C. Maltepe University
+Faculty of Engineering and Natural Sciences
+Computer Engineering Department
+
+Capstone Project 
+
+“Quarter” Social Media Web Application for discovering neighborhood
+
+
+
 First, run the development server:
 
 ```bash
