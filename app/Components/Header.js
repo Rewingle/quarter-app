@@ -66,8 +66,9 @@ export default function Header() {
                             </Flex>
                             <Box sx={styles.profile}>
                                 <Image src='https://storage.googleapis.com/lookal/mainuser.jpg' width='42' height='42' style={{ borderRadius: '50%', marginRight: '1em' }} />
-                                <Button onClick={() => { signOut() }} sx={{ backgroundColor: '#14B8A6' }}>Logout</Button>
+                                
                             </Box>
+                            <Button onClick={() => { signOut() }} sx={{ backgroundColor: '#14B8A6'}}>Logout</Button>
                         </Box>
 
 
@@ -105,8 +106,8 @@ const styles = {
     },
     headerInner: {
         display: 'flex',
-        pr: 6,
-        pl: 6,
+        pr: [3,3,3,6,6,6],
+        pl: [3,3,3,6,6,6],
         alignItems: 'center',
         justifyContent: 'space-between',
         '@media only screen and (max-width: 968px)': {
