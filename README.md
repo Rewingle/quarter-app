@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## “Quarter” Social Media Web Application for discovering neighborhood
 
 T.C. Maltepe University
 Faculty of Engineering and Natural Sciences
@@ -8,7 +8,7 @@ Computer Engineering Department
 
 Capstone Project 
 
-“Quarter” Social Media Web Application for discovering neighborhood
+
 
 
 
