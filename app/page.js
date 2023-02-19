@@ -9,7 +9,7 @@ import { signOut, useSession } from "next-auth/react";
 
 
 function Page() {
-  const [isLoading, setLoading] = useState(true)
+/*   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
     setTimeout(() => {
@@ -17,7 +17,7 @@ function Page() {
     }, 400);
 
   }, []);
-
+ */
 
   const { data: session } = useSession();
   //LOAD FIRST TO WAIT SESSION THEN IF NOT SHOW HOME PAGE
@@ -25,11 +25,11 @@ function Page() {
 
     <ThemeProvider theme={Theme}>
       {
-        !isLoading ?
+        
           session?.user ? <Feed />
             :
             <Home />
-          : null
+        
       }
 
 
