@@ -8,7 +8,7 @@ import RightBar from "./Components/RightBar";
 import LeftBar from "./Components/LeftBar";
 import Post from "./Components/Post/Post";
 import PostData from "./Components/Post/PostData";
-
+import UserPost from "./Components/Post/UserPost";
 export default function Feed() {
     const { data: session } = useSession();
 
@@ -32,15 +32,16 @@ export default function Feed() {
                     <Box sx={styles.feedBarContainer}>
 
                         <Container sx={{ justifyContent: 'center', display: 'flex' }}>
-                            <ul style={{width:'42em'}}>
-                                {PostData.map(({fullname,profilePic,text,image,location,date,likes},index)=>(
+                            <ul style={{ width: '42em' }}>
+                                <UserPost />
+                                {PostData.map(({ fullname, profilePic, text, image, location, date, likes }, index) => (
                                     <React.Fragment>
-                                    <li key={index}><Post fullname={fullname} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes}/></li>
-                                    <br/>
+                                        <li key={index}><Post fullname={fullname} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
+                                        <br />
                                     </React.Fragment>
                                 ))}
                             </ul>
-                            
+
                         </Container>
                     </Box>
 
@@ -55,7 +56,7 @@ export default function Feed() {
 const styles = {
     grid: {
         display: ['flex', 'flex', 'flex', 'flex', 'grid'],
-        gridTemplateColumns: '1fr 2fr 1fr'
+        gridTemplateColumns: '2fr 3fr 2fr'
     },
 
     feedBar: {

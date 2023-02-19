@@ -21,7 +21,7 @@ function Home() {
         <div>
             <Box sx={styles.header}>
                 <Box sx={styles.headerContainer}>
-                    <Image src='https://storage.googleapis.com/lookal/logomini.png' width={128} height={64} style={styles.logo}></Image>
+                    <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quarterlogo-mini.png' width={128} height={64} style={styles.logo}></Image>
                     <ul style={{ color: 'white', padding: '0.4em', fontWeight: '600', marginLeft: '3em' }}>
                         <li style={{ float: 'left', display: 'inline' }}><a href=''>Neighbors</a></li>
                         <li style={{ float: 'left', display: 'inline', marginLeft: '3em' }}><a href=''>Business</a></li>
@@ -32,7 +32,7 @@ function Home() {
             </Box>
             <Box sx={styles.imageContainer}>
                 <Login />
-                <Image src='https://storage.googleapis.com/lookal/login-back.jpg' fill style={styles.bgImage}></Image>
+                <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/home-bg.jpg' fill style={styles.bgImage}></Image>
             </Box>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                 <Box sx={styles.lowerContent}>

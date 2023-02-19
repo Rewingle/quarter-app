@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Card, Container } from 'theme-ui'
 import Image from 'next/image'
-import Comment from '../Comment'
+import Comment from './Comment'
 
 function Post(props) {
     const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-6 h-6">
@@ -16,8 +16,8 @@ function Post(props) {
         <Card sx={styles.post} className="drop-shadow-lg">
             <Box sx={{ width: '100%', top: 0 }}>
                 <Box sx={styles.userInfo}>
-                    <div style={{ gridRow: '1/span 2', width: '52px', height: '52px' }}>
-                        <Image src={props.profilePic} width='52' height='52' style={{ borderRadius: '50%' }} /></div>
+                    <div style={{ gridRow: '1/span 2', width: '46px', height: '46px' }}>
+                        <Image src={props.profilePic} width='46' height='46' style={{ borderRadius: '50%' }} /></div>
                     <div style={{ marginLeft: '1em' }}>
                         <div style={{ fontWeight: '600', fontSize: '16px' }}>{props.fullname}</div>
                         <div style={{ fontSize: '16px', fontWeight: 'lighter', display: 'flex', opacity: 0.7 }}><span>{locationIcon}</span><span>{props.location} , {props.date}</span></div>
