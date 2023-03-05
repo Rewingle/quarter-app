@@ -13,11 +13,11 @@ export default function LoggedLayout({ children }) {
             console.log("Unauth")
         },
     })
-/* 
+
     if (status === "loading") {
 
         return <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh'}}><DotLoader color='#14B8A6' size={30}/></div>
-    } */
+    } 
 
     const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />

@@ -30,7 +30,7 @@ export default async function page({ properties }) {
   return (
     <div>
       {users.map((obj) => {
-        return <li key={obj._id}>{obj.fullname}{obj.text}</li>
+        return <div key={obj._id}>{obj.fullname}{obj.text}</div>
       })}
     </div>
   )
