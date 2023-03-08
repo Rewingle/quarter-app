@@ -58,9 +58,9 @@ export default function LoggedLayout({ children }) {
 
                 </Box>
 
-                <Box sx={{ width: '100%' }}>
+                <Container sx={{ justifyContent: 'center', display: 'flex' }}>
                     {children}
-                </Box>
+                </Container>
 
 
                 <Box sx={styles.rightBar}>

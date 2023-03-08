@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react'
 import { Box, Container, Flex, Image, Input } from 'theme-ui';
 import Sticky from 'react-stickynode'

@@ -9,7 +9,7 @@ import Post from "./Components/Post/Post";
 import PostData from "./Components/Post/PostData";
 import UserPost from "./Components/Post/UserPost";
 
-async function getPosts() {
+/* async function getPosts() {
 
     const { db } = await connectToDatabase();
     const data = await db.collection("users").find({}).limit(10).toArray();
@@ -30,10 +30,10 @@ async function getPosts() {
 
     return filtered
 }
-
+ */
 
 export default function Feed() {
-    const { data: session } = useSession();
+   /*  const { data: session } = useSession();
 
     const { status } = useSession({
         required: true,
@@ -45,7 +45,7 @@ export default function Feed() {
     if (status === "loading") {
         return "Loading or not authenticated..."
     }
-
+ */
     const posts = [    {
         fullname: 'Aylin Barış',
         profilePic: 'https://storage.googleapis.com/lookal/image.jpg',

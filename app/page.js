@@ -1,43 +1,38 @@
 'use client'
-import React, { useState, useEffect } from "react"
+import React from "react"
 import Feed from './Feed'
-import Image from 'next/image';
 import Home from "./Home";
-import { ThemeProvider } from 'theme-ui'
+//import { ThemeProvider } from 'theme-ui'
 import Theme from '../theme/theme';
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { redirect } from 'next/navigation';
 
-
-function Page() {
-/*   const [isLoading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 400);
-
-  }, []);
- */
+export default function Page() {
+  /*   const [isLoading, setLoading] = useState(true)
+  
+    useEffect(() => {
+      setTimeout(() => {
+        setLoading(false)
+      }, 400);
+  
+    }, []);
+   */
 
   const { data: session } = useSession();
-  //LOAD FIRST TO WAIT SESSION THEN IF NOT SHOW HOME PAGE
-  return (
 
-    <ThemeProvider theme={Theme}>
-      {
-        
-          session?.user ? <Feed />
-            :
-            <Home />
-        
-      }
+  //const feedData = await getFeed();
+  if (session) {
+    redirect('/feed')
+  }
+  else {
+    return (
+      
+        <Home />
+      
+    )
+  }
 
-
-    </ThemeProvider>
-
-
-  )
 
 }
-export default Page
+
 

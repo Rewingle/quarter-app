@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react'
 import { Box, Button, Flex, Input, Card } from 'theme-ui'
 import Image from 'next/image'

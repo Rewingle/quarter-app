@@ -1,5 +1,3 @@
-'use client'
-
 import React from "react";
 import { Container, Box, Text, Grid } from "theme-ui";
 import { signIn, signOut, useSession } from 'next-auth/react';
