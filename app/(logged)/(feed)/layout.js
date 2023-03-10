@@ -4,20 +4,22 @@ import React from 'react'
 import { Box, Container } from 'theme-ui'
 import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
+import {redirect} from 'next/navigation'
 
 export default function LoggedLayout({ children }) {
 
     const { status } = useSession({
         required: true,
         onUnauthenticated() {
-            console.log("Unauth")
+            redirect('/auth/login')
+            
         },
     })
 
     if (status === "loading") {
 
-        return <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh'}}><DotLoader color='#14B8A6' size={30}/></div>
-    } 
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
+    }
 
     const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -57,10 +59,14 @@ export default function LoggedLayout({ children }) {
 
 
                 </Box>
+                <Box sx={styles.feedBar}>
+                    <Box sx={styles.feedBarContainer}>
+                        <Container sx={{ justifyContent: 'center', display: 'flex' }}>
+                            {children}
+                        </Container>
+                    </Box>
+                </Box>
 
-                <Container sx={{ justifyContent: 'center', display: 'flex' }}>
-                    {children}
-                </Container>
 
 
                 <Box sx={styles.rightBar}>
@@ -114,7 +120,15 @@ const styles = {
             }
         }
     },
+    feedBar: {
+        width: '100%',
+        p: 3,
 
+    },
+    feedBarContainer: {
+        width: '100%',
+        height: '100vh'
+    },
     leftBarList: {
         fontSize: '24px',
         marginTop: '4em',

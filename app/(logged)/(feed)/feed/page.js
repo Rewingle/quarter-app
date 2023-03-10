@@ -2,8 +2,8 @@
 import React from "react";
 //import { Container, Box } from "theme-ui";
 import Post from "../../../Components/Post/Post.js";
-import {getFeed} from '../../../../lib/getFeed.js';
-
+import { getFeed } from '../../../../lib/getFeed.js';
+import UserPost from "../../../Components/Post/UserPost.js";
 
 export default async function Page() {
 
@@ -47,20 +47,18 @@ export default async function Page() {
      */
 
     return (
-        <React.Fragment>
+        <ul style={{ width: '42em' }}>
+            <UserPost />
+
+            {posts?.map(({ fullname, profilePic, text, image, location, date, likes }, index) => (
+                <React.Fragment>
+                    <li key={index}><Post fullname={fullname} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
+                    <br />
+                </React.Fragment>
+            ))}
 
 
-            <ul style={{ width: '42em' }}>
-
-                {posts?.map(({ fullname, profilePic, text, image, location, date, likes }, index) => (
-                    <React.Fragment>
-                        <li key={index}><Post fullname={fullname} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
-                        <br />
-                    </React.Fragment>
-                ))}
-            </ul>
-
-        </React.Fragment>
+        </ul>
     )
 }
 

@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import { Box, Container, Flex, Image, Input } from 'theme-ui';
 import Sticky from 'react-stickynode'
 import Link from 'next/link';
+import {signOut } from "next-auth/react"
 
-import { getProviders, signOut } from "next-auth/react"
 
 export default function Header() {
     const homeIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 text-neutral-900">
@@ -40,7 +40,6 @@ export default function Header() {
         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
     </svg>
 
-
     const [mobileMenu, setMobileMenu] = useState(false);
 
     const [accountMenu, toggleAccountMenu] = useState(false)
@@ -67,7 +66,8 @@ export default function Header() {
                             <Box className='headerInner' sx={styles.headerInner}>
 
                                 <Box sx={styles.logo}>
-                                    <Link href="/">
+                                    
+                                    <Link href="/feed">
                                         <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quarterlogo.png' alt="lookal logo" sx={styles.logoStyle} />
                                     </Link>
                                 </Box>
@@ -134,7 +134,7 @@ export default function Header() {
                         <Link href='/user/dummy'><li>{account} <div>Profile</div></li></Link>
                         <Link href='/settings'><li>{settings} <div>Settings</div> </li></Link>
                         <Link href='/support'><li>{help} <div>Help and Support</div></li></Link>
-                        <li onClick={() => signOut()}>{logout}<div>Log out</div></li>
+                        <li onClick={() => {signOut({callbackUrl: '/'})}}>{logout}<div>Log out</div></li>
                     </ul>
                 </Box>
             </Box> : null}

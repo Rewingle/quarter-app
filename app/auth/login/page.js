@@ -1,7 +1,8 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { useRef } from "react";
-import { Input, Button, Box, Flex, Container } from "theme-ui";
+import { Input, Button, Box} from "theme-ui";
+import Link from "next/link";
 
 const LoginPage = () => {
     const userName = useRef("");
@@ -12,7 +13,7 @@ const LoginPage = () => {
             username: userName.current,
             password: pass.current,
             redirect: true,
-            callbackUrl: "/",
+            callbackUrl: "/feed",
         });
     };
     return (
@@ -41,6 +42,12 @@ const LoginPage = () => {
              
                     
                 </Box>
+                
+                <br/>
+                <br/>
+                <br/>
+                <hr/>
+                <Box sx={{textAlign:'center'}}>new to Quarter?   <Link href="/register/address" style={{color:'blue',fontWeight:'600'}}>Sign Up</Link> </Box>
             </Box>
         </div>
     );
