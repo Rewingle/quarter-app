@@ -1,13 +1,14 @@
 'use client'
 import React from 'react'
 import {Box,Container} from 'theme-ui'
+import { redirect } from 'next/navigation';
 function RightBar() {
     return (
         <Box sx={styles.rightBar}>
             <Box sx={styles.rightBarContainer}>
                 <Container sx={styles.rightBarInner}>
                     <ul>
-                        <li>-PEOPLE YOU MAY KNOW</li>
+                        <li onClick={()=>redirect('/register/address')}>-PEOPLE YOU MAY KNOW</li>
                         <li>-ADS</li>
                         <li>-SHOWCASE BANNER</li>
                     </ul>

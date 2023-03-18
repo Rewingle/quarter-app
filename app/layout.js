@@ -1,11 +1,10 @@
 'use client'
-import Header from './Components/Header'
 import './globals.css'
 import { SessionProvider } from "next-auth/react"
-
+import { ThemeProvider } from 'theme-ui'
 
 export default function RootLayout({ children }) {
-    
+
     return (
         <SessionProvider>
             <html lang="en">
@@ -16,8 +15,10 @@ export default function RootLayout({ children }) {
                 </head>
                 <body>
 
-           
-                    <main>{children}</main>
+
+                    <main>
+                        <ThemeProvider>{children}</ThemeProvider>
+                    </main>
 
 
                 </body>

@@ -1,6 +1,6 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
-
+//import {MongoDbAdapter} from 'next-auth/adapters'
 
 export const authOptions = {
   // Configure one or more authentication providers

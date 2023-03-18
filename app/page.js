@@ -1,6 +1,5 @@
 'use client'
 import React from "react"
-import Feed from './Feed'
 import Home from "./Home";
 //import { ThemeProvider } from 'theme-ui'
 import Theme from '../theme/theme';

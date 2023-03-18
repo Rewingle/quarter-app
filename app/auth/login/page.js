@@ -21,7 +21,7 @@ const LoginPage = () => {
             className={
                 "flex justify-center items-center h-screen"
             }
-            s
+            
         >
             <Box sx={styles.loginForm}>
                 <Box sx={styles.formContainer}>

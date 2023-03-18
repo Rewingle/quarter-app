@@ -1,9 +1,11 @@
 'use client'
 import React from 'react'
 import Image from 'next/image'
-import { Box, Button, Input } from 'theme-ui';
+import { Box, Button, Container } from 'theme-ui';
 import Login from './Components/HomeRegister';
 import Footer from './Components/Footer';
+
+
 function Home() {
     const connection = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-teal-500">
         <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
@@ -21,10 +23,10 @@ function Home() {
         <div>
             <Box sx={styles.header}>
                 <Box sx={styles.headerContainer}>
-                    <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quarterlogo-mini.png' width={128} height={64} style={styles.logo}></Image>
-                    <ul style={{ color: 'white', padding: '0.4em', fontWeight: '600', marginLeft: '3em' }}>
+                    <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quarterlogo.png' width={128} height={64} style={styles.logo}></Image>
+                    <ul style={{ color: 'white', padding: '0.4em', fontWeight: '600', marginLeft: '2em' }}>
                         <li style={{ float: 'left', display: 'inline' }}><a href=''>Neighbors</a></li>
-                        <li style={{ float: 'left', display: 'inline', marginLeft: '3em' }}><a href=''>Business</a></li>
+                        <li style={{ float: 'left', display: 'inline', marginLeft: '1em' }}><a href=''>Business</a></li>
                     </ul>
                 </Box>
 
@@ -32,14 +34,18 @@ function Home() {
             </Box>
             <Box sx={styles.imageContainer}>
                 <Login />
-                <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/home-bg.jpg' fill style={styles.bgImage}></Image>
+                <Box sx={styles.bgImage}>
+                    <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/home-bg.jpg' fill></Image>
+                </Box>
             </Box>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                 <Box sx={styles.lowerContent}>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
-                        <Box><p style={{ textAlign: 'center', fontSize: '24px' }}>Where communities come together to greet newcomers, exchange recommendations, and read the latest local news.
+                        <Box><p style={{textAlign: 'center', fontSize: '24px', fontStyle:'italic',fontWeight:'600'}}>
+                            
+                            Your neighborhood between your fingers.</p><br/><p style={{ textAlign: 'center', fontSize: '20px'}}>Where communities come together to greet newcomers, exchange recommendations, and read the latest local news.
                             Where neighbors support local businesses and get updates from public agencies. Where neighbors borrow tools and sell couches.
                             It's how to get the most out of everything nearby. Welcome, neighbor.</p></Box>
                     </Box>
@@ -88,8 +94,8 @@ function Home() {
                     </Box>
                 </Box>
             </Box>
-            <Box sx={{ width: '100%',display:'flex',justifyContent:'center',paddingBottom:'4em' }}>
-                <Button className='bg-gradient-to-r from-teal-400 to-cyan-500' sx={{width:'8em',height:'3em', color:'white',fontSize:'20px',fontWeight:'600'}}>SIGN UP</Button>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', paddingBottom: '4em' }}>
+                <Button className='bg-gradient-to-r from-teal-400 to-cyan-500' sx={{ width: '8em', height: '3em', color: 'white', fontSize: '20px', fontWeight: '600' }}>SIGN UP</Button>
             </Box>
 
             <Footer />
@@ -100,24 +106,23 @@ function Home() {
 
 const styles = {
     imageContainer: {
-        height: '100vh',
+        height: ['70vh','70vh','70vh','100vh','100vh'],
         position: 'relative',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: [null,null,null,'center','center'],
         justifyContent: 'center',
     },
     lowerContent: {
         width: ['62em'],
-        py: 6
+        py: [3, 3, 3, 6],
+        px: 4
     },
     formContainer: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
-    bgImage: {
-        display: ['relative', 'none', 'none', 'none', 'none']
-    },
+
     header: {
         zIndex: 20,
         width: '100%',
@@ -125,14 +130,18 @@ const styles = {
         justifyContent: 'center',
     },
     headerContainer: {
+        position: 'absolute',
         width: 'inherit',
         height: 'inherit',
         backgroundColor: 'black',
-        opacity: 0.8,
+        opacity: 0.7,
         py: 10,
         px: 30,
         display: 'flex',
 
+    },
+    bgImage:{
+        display: ['none','none','none','block','block']
     },
     showcase: {
 
@@ -142,16 +151,15 @@ const styles = {
     },
     features: {
         marginTop: '8em',
-
         display: 'flex',
-        p: 3,
-
+       
+        justifyContent:'center',
+        alignItems:'center',
+        px:5,
         '& li': {
-            float: 'left',
-            marginLeft: '4em',
+            float:'left',
             width: '16em',
             height: '16em',
-
         }
     }
 }

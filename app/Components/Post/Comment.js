@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Box, Input, Flex, Container } from 'theme-ui'
+import { Box, Input } from 'theme-ui'
 import Image from 'next/image'
 function Comment(props) {
 

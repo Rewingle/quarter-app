@@ -2,7 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { Box, Button } from 'theme-ui';
-import Login from '../Components/HomeRegister';
+import HomeRegister from '../Components/HomeRegister';
 import Footer from '../Components/Footer';
 function Home() {
     const connection = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-teal-500">
@@ -31,7 +31,7 @@ function Home() {
 
             </Box>
             <Box sx={styles.imageContainer}>
-                <Login />
+                <HomeRegister />
                 <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/home-bg.jpg' fill style={styles.bgImage}></Image>
             </Box>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
@@ -108,7 +108,7 @@ const styles = {
     },
     lowerContent: {
         width: ['62em'],
-        py: 6
+        
     },
     formContainer: {
         display: 'flex',
@@ -116,7 +116,7 @@ const styles = {
         justifyContent: 'center'
     },
     bgImage: {
-        display: ['relative', 'none', 'none', 'none', 'none']
+        display: 'none'
     },
     header: {
         zIndex: 20,
