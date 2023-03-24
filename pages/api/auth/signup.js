@@ -30,12 +30,12 @@ async function handler(req, res) {
             return;
         }
         //Hash password
-        const status = await db.collection('users').insertOne({
+        /* const status = await db.collection('users').insertOne({
             email,
             password: await hash(password, 12),
-        });
+        }); */
         //Send success response
-        res.status(201).json({ message: 'User created', ...status });
+        res.status(200).json({ message: 'User is unique'});
         //Close DB connection
         client.close(); 
     } else {

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Box, Button, Flex, Input, Card } from 'theme-ui'
 import Image from 'next/image'
 import Popup from '../Popup'
-import { createPost } from '../../../pages/api'
+//import { createPost } from '../../../pages/api'
 
 function UserPost(props) {
     const image = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 opacity-60">
@@ -17,7 +17,7 @@ function UserPost(props) {
     const [text,setText] = useState(null)
 
     const handleSubmit =()=>{
-        createPost({...data})
+       
         alert(text)
     }
 
