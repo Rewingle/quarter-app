@@ -5,68 +5,70 @@ import { signIn } from 'next-auth/react';
 import DotLoader from 'react-spinners/DotLoader'
 import SelectAddress from './SelectAddress';
 import { sign } from 'crypto';
+import { useForm } from 'react-hook-form'
 //import { MongoClient } from 'mongodb';
 
 function Login() {
+    const danger = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-red-500">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+    </svg>
 
 
     const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
-    const [tempUser, setTempUser] = useState([{email: "",password: ""}])
+    const [tempUser, setTempUser] = useState(null)
+    const [userValid, setUserValid] = useState(false)
 
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors }
+    } = useForm();
+    const onSubmit = data => {setLoading(true);setTempUser(data);setLoading(false);}
 
-    const handleSubmit = async (e) => {
-        setLoading(true)
-        if (!email || !email.includes('@') || !password) {
-            alert('Invalid details');
-            return;
-        }
-        //POST form values
-        const res = await fetch('/api/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-        });
-        //Await for data for any desirable next steps
-        const data = await res.json();
-        if (data.userId) {
-         /*    setId(data.userId)
-            setLoading(false)
-            return */
-            alert("User Already Exist");
-            signIn()
-            setLoading(false)
-        }
-        else{
-            setTempUser({email: email, password: password})
-            setLoading(false)
-        }
-
-    }
 
     return (
         <Box sx={styles.form}>
             <Box sx={styles.registerForm}>
 
-
-
-                {!loading ? !tempUser.email ? <Box sx={styles.formContainer}>
+                {!loading ? !tempUser ? <Box sx={styles.formContainer}>
                     <Box sx={{ fontSize: 24 }}>Discover Neighbors</Box>
                     <Box sx={{ fontSize: 24, fontWeight: 600, color: '#2DD4BF' }}>with Quarter</Box>
                     <br />
-                    <Input sx={styles.email} placeholder='Email address' type='email' className='placeholder:text-black h-12 ' onChange={(e) => setEmail(e.target.value)}></Input>
-                    <br />
-                    <Input sx={styles.email} placeholder='Password' type='password' className='placeholder:text-black h-12' onChange={(e) => setPassword(e.target.value)}></Input>
-                    <br />
-                    <Button sx={styles.button} className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handleSubmit()}>Continue</Button>
-                    <br />
-                    <br />
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <Input {...register("email", {
+                            required: true,
+                            pattern: /\S+@\S+\.\S+/
+                        })} sx={styles.email} name='email' placeholder='Email address' className='placeholder:text-black h-12 '></Input>
+
+                        <br />
+
+                        <Input {...register("password", { required: true, pattern: /^(?=\D*\d)[a-zA-Z0-9]{6,32}$/ })} sx={styles.email} name='password' placeholder='Password' type='password' className='placeholder:text-black h-12' ></Input>
+
+                        <br />
+
+
+                        <Button sx={styles.button} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500">Continue</Button>
+                        <Box sx={{height:'2.2em',py:2}}>
+                            {errors?.email?.type === "required" && (
+                                <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}><div style={{ display: 'flex' }}>{danger} Email is required</div></div></p>
+                            )}
+                            {errors?.email?.type === "pattern" && (
+                                <p style={{ fontSize:'14px', color: 'red' }}><div style={{ display: 'flex' }}>{danger} Invalid email</div></p>
+                            )}
+                            {errors?.password?.type === "required" && (
+                                <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}>{danger} Password is required.</div></p>
+                            )}
+                            {errors?.password?.type === "pattern" && (
+                                <p style={{ fontSize: '12px', color: 'red' }}><div style={{ display: 'flex' }}>{danger} Password must be more than 6 characters, including numbers.</div> </p>
+                            )}
+                        </Box>
+                        <br />
+                    </form>
+
+
                     <Container sx={{ fontSize: 14, }}>
                         <span>By signing up, you agree to our <a href='/privacy-policy' style={{ color: 'blue' }}>Privacy Policy</a>,
                             <a href='/cookie-policy' style={{ color: 'blue' }}>Cookie Policy</a>,</span>
@@ -76,7 +78,7 @@ function Login() {
 
 
                 </Box>
-                    : <SelectAddress tempUser={tempUser}/>
+                    : <SelectAddress tempUser={tempUser} />
                     : <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><DotLoader color='#14B8A6' size={30} /></div>}
 
             </Box>
@@ -125,7 +127,7 @@ const styles = {
     },
     registerForm: {
         backgroundColor: 'white',
-        height: ['60vh', null, null, '460px'],
+        height: ['60vh', null, null, '480px'],
         width: ['100vw', null, null, '420px'],
         borderRadius: ['0px', '0px', '0px', '16px'],
         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
