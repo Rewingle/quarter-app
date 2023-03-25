@@ -26,7 +26,12 @@ function Login() {
         watch,
         formState: { errors }
     } = useForm();
-    const onSubmit = data => {setLoading(true);setTempUser(data);setLoading(false);}
+    const onSubmit = async (data) => {
+        setLoading(true);
+        //const res = await fetch('/api/auth/checkUser',{method:'POST',body:{data}})
+        setTempUser(data);
+        
+        setLoading(false);}
 
 
     return (
