@@ -29,9 +29,9 @@ function EnterUserInfo(props) {
       <Box sx={{ textAlign: 'center',fontWeight:'600' }}>UPLOAD PROFILE PICTURE</Box>
 
       <br />
-      <Input placeholder='First Name' onChange={(e) => setWord(e.target.value.substring(0, 1).toUpperCase())} />
+      <Input placeholder='First Name' sx={styles.textArea} onChange={(e) => setWord(e.target.value.substring(0, 1).toUpperCase())} className='placeholder:text-black h-12 ' />
       <br />
-      <Input placeholder='Last Name' />
+      <Input placeholder='Last Name' sx={styles.textArea} className='placeholder:text-black h-12 '/>
       <br />
       <Button sx={{float:'right'}} className="bg-gradient-to-r from-teal-400 to-cyan-500">Continue</Button>
 
@@ -39,5 +39,13 @@ function EnterUserInfo(props) {
     </Box>
   )
 }
+const styles = {
+  textArea: {
+    width: '100%',
+    backgroundColor: 'rgb(229, 229, 229)',
+    border: 'none',
+    color: 'black',
 
+},
+}
 export default EnterUserInfo

@@ -5,13 +5,14 @@ async function handler(req, res) {
     if (req.method === 'POST') {
 
         //Getting email and password from body
-        const { email, password } = req.body;
+        const email = JSON.parse(req.body).email
+        const password = JSON.parse(req.body).password
         //Validate
         
-        if (!email || !email.includes('@') || !password) {
+       /*  if (!email || !email.includes('@') || !password) {
             res.status(422).json({ message: 'Invalid Data' });
             return;
-        }
+        } */
         //Connect with database
         const client = await MongoClient.connect(
             `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
@@ -23,6 +24,7 @@ async function handler(req, res) {
             .collection('users')
             .findOne({ email: email });
         //Send error response if duplicate user is found
+        console.log(email)
         if (checkExisting) {
             const userId = JSON.stringify(checkExisting._id).split("'")[0].split('"')[1]
             res.status(422).json({ message: 'User already exists',userId: userId});

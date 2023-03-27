@@ -28,10 +28,24 @@ function Login() {
     } = useForm();
     const onSubmit = async (data) => {
         setLoading(true);
-        //const res = await fetch('/api/auth/checkUser',{method:'POST',body:{data}})
-        setTempUser(data);
-        
-        setLoading(false);}
+        await fetch('/api/auth/checkUser', {
+            method: 'POST', body: JSON.stringify({
+                email: data.email,
+                password: data.password
+            })
+        }).then(res => {
+            if (res.status == 422) {
+                alert('User exist')
+                signIn()
+            }
+            else {
+                setTempUser(data);
+
+            }
+        })
+
+        setLoading(false);
+    }
 
 
     return (
@@ -56,12 +70,12 @@ function Login() {
 
 
                         <Button sx={styles.button} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500">Continue</Button>
-                        <Box sx={{height:'2.2em',py:2}}>
+                        <Box sx={{ height: '2.2em', py: 2 }}>
                             {errors?.email?.type === "required" && (
                                 <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}><div style={{ display: 'flex' }}>{danger} Email is required</div></div></p>
                             )}
                             {errors?.email?.type === "pattern" && (
-                                <p style={{ fontSize:'14px', color: 'red' }}><div style={{ display: 'flex' }}>{danger} Invalid email</div></p>
+                                <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}>{danger} Invalid email</div></p>
                             )}
                             {errors?.password?.type === "required" && (
                                 <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}>{danger} Password is required.</div></p>
