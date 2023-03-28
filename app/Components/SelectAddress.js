@@ -8,7 +8,7 @@ function SelectAddress(props) {
     const [districts, setDistricts] = useState()
     const [neighborhoods, setNeighborhoods] = useState()
     const [selectedProvince, setSelectedProvince] = useState()
-    const [submit,setSubmit] = useState(false)
+    const [submit, setSubmit] = useState(false)
     const [selectedDistrict, setSelectedDistrict] = useState()
     const [selectedNeighborhood, setSelectedNeighborhood] = useState()
     useEffect(() => {
@@ -16,22 +16,20 @@ function SelectAddress(props) {
         getProvinces()
     }, [])
     const getProvinces = async () => {
-        try {
-            const res = await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) }).catch(err=>alert(err))
-            const data = await res.json()
-            setProvinces(data)
-            //return ['istanbul', 'ankara']
-            /* const client = await MongoClient.connect(
-                `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
-                { useNewUrlParser: true, useUnifiedTopology: true }
-            );
-            const data = await db.collection('provinces').find({}).toArray()
-            client.close()
-            setProvinces(data[0].provinces) */
-        }
-        catch {
-            alert('Error occured when loading provinces')
-        }
+        
+        const res= await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) }).catch(err => alert(err))
+        const data = await res.json()
+        setProvinces(data)
+        //return ['istanbul', 'ankara']
+        /* const client = await MongoClient.connect(
+            `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
+            { useNewUrlParser: true, useUnifiedTopology: true }
+        );
+        const data = await db.collection('provinces').find({}).toArray()
+        client.close()
+        setProvinces(data[0].provinces) */
+
+
 
     }
 
@@ -63,7 +61,7 @@ function SelectAddress(props) {
     }
     return (
         <Box>
-            {!submit?<Box>
+            {!submit ? <Box>
                 <Box sx={{ display: 'flex' }}><Box sx={{ fontSize: 24, fontFamily: 'montserrat', fontWeight: '600', fontStyle: 'italic' }}>Find your </Box><Box color='#2DD4BF' sx={{ fontSize: 24, fontFamily: 'montserrat', marginLeft: '12px', fontWeight: '600', fontStyle: 'italic' }}>QUARTER</Box></Box>
                 <Box sx={{ marginTop: '0.6em' }}>
                     <Box>Country:</Box>
@@ -167,7 +165,7 @@ function SelectAddress(props) {
                     <Button sx={styles.button} className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handleSubmit()}>Continue</Button>
 
                 </Box>
-            </Box>:<EnterUserInfo address={{district: selectedDistrict, neighborhood: selectedNeighborhood }} tempUser={props.tempUser}/>}
+            </Box> : <EnterUserInfo address={{ district: selectedDistrict, neighborhood: selectedNeighborhood }} tempUser={props.tempUser} />}
         </Box>
     )
 }
