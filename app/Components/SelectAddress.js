@@ -17,7 +17,7 @@ function SelectAddress(props) {
     }, [])
     const getProvinces = async () => {
         try {
-            const res = await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) })
+            const res = await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) }).catch(err=>alert(err))
             const data = await res.json()
             setProvinces(data)
             //return ['istanbul', 'ankara']

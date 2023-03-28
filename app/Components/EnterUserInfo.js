@@ -18,7 +18,7 @@ function EnterUserInfo(props) {
       <Box sx={{ fontWeight: '700', fontStyle: 'italic', fontSize: '22px' }}>LET'S GET TO KNOW YOU</Box>
       <br />
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Box sx={{ position: 'relative', '&:hover': { cursor: 'pointer' } }} onClick={() => alert("UPLOAD PHOTO COMPONENT")}>
+        <Box sx={{ position: 'relative', '&:hover': { cursor: 'pointer' } }} onClick={() => alert("WORK IN PROGRESS")}>
           <Box sx={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'gray', position: 'absolute', bottom: 0, right: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{camera}</Box>
           <Box sx={{ width: '88px', height: '88px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="bg-gradient-to-r from-teal-400 to-cyan-500">
             <Box sx={{ fontWeight: '700', color: 'white', fontSize: '42px' }}>{word?word:user}</Box>
