@@ -1,12 +1,27 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { useRef } from "react";
-import { Input, Button, Box} from "theme-ui";
+import { useRef,useState } from "react";
+import { Input, Button, Box } from "theme-ui";
 import Link from "next/link";
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import FormControl from '@mui/material/FormControl';
 
 const LoginPage = () => {
     const userName = useRef("");
     const pass = useRef("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const onSubmit = async () => {
         const result = await signIn("credentials", {
@@ -21,33 +36,52 @@ const LoginPage = () => {
             className={
                 "flex justify-center items-center h-screen"
             }
-            
+
         >
             <Box sx={styles.loginForm}>
                 <Box sx={styles.formContainer}>
                     <h1 className="font-bold text-3xl">Welcome back</h1>
                     <br />
-                    <Input sx={styles.email} placeholder='Email address' type='email' className='placeholder:text-black h-12 ' onChange={(e) => (userName.current = e.target.value)}></Input>
+                    <TextField sx={{width:'100%',backgroundColor:'#f2f2f2'}} id="outlined-basic" label="Email" variant="outlined" />
                     <br />
-                    <Input sx={styles.email} placeholder='Password' type='password' className='placeholder:text-black h-12' onChange={(e) => (pass.current = e.target.value)}></Input>
+                    <FormControl sx={{ width: '100%', my: 3, backgroundColor: '#f2f2f2' }} variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Password"
+                        />
+                    </FormControl>
                     <div><a href="/forgot-password" className="text-sky-400 font-semibold opacity-80">Forgot Password?</a></div>
-                    <br/>
+                    <br />
                     <Button sx={styles.button} className="bg-gradient-to-r from-cyan-500 to-blue-500" onClick={onSubmit}>Login</Button>
                     <br />
-                    For testing use only; 
-                    <br/>
+                    For testing use only;
+                    <br />
                     Email: test@admin.com
-                    <br/>
+                    <br />
                     Password: test1234
-             
-                    
+
+
                 </Box>
-                
-                <br/>
-                <br/>
-                <br/>
-                <hr/>
-                <Box sx={{textAlign:'center'}}>new to Quarter?   <Link href="/register/address" style={{color:'blue',fontWeight:'600'}}>Sign Up</Link> </Box>
+
+                <br />
+                <br />
+                <br />
+                <hr />
+                <Box sx={{ textAlign: 'center' }}>new to Quarter?   <Link href="/register/address" style={{ color: 'blue', fontWeight: '600' }}>Sign Up</Link> </Box>
             </Box>
         </div>
     );

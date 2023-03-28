@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react"
 import { ThemeProvider } from 'theme-ui'
 
 export default function RootLayout({ children }) {
-
+    //THEME PROVIDER IS NOT WRAPPED {children}
     return (
         <SessionProvider>
             <html lang="en">
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
 
 
                     <main>
-                        <ThemeProvider>{children}</ThemeProvider>
+                        {children}
                     </main>
 
 
