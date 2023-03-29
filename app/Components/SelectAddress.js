@@ -19,6 +19,7 @@ function SelectAddress(props) {
         
         const res= await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) }).catch(err => alert(err))
         const data = await res.json()
+        console.log(data)
         setProvinces(data)
         //return ['istanbul', 'ankara']
         /* const client = await MongoClient.connect(
