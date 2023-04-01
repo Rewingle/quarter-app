@@ -166,7 +166,7 @@ function SelectAddress(props) {
                     <Button sx={styles.button} className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handleSubmit()}>Continue</Button>
 
                 </Box>
-            </Box> : <EnterUserInfo address={{ district: selectedDistrict, neighborhood: selectedNeighborhood }} tempUser={props.tempUser} />}
+            </Box> : <EnterUserInfo address={{province: selectedProvince, district: selectedDistrict, neighborhood: selectedNeighborhood }} tempUser={props.tempUser} />}
         </Box>
     )
 }

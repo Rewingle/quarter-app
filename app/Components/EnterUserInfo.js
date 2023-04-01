@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { Input, Box, Select, Button } from 'theme-ui'
-
+import DotLoader from 'react-spinners/DotLoader'
+import { Input, Box, Button } from 'theme-ui'
+import { useForm } from 'react-hook-form'
+import { hash } from 'bcryptjs'
 
 function EnterUserInfo(props) {
   const camera = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-blue-50">
@@ -10,32 +12,101 @@ function EnterUserInfo(props) {
   const user = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-blue-50">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
   </svg>
+  const danger = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-red-500">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+  </svg>
 
   const [word, setWord] = useState(null)
 
+  const [firstName, setFirstName] = useState(null)
+  const [lastName, setLastName] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [isRegister, setRegister] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
+
+  /* const onSubmit = (data)=>{
+    alert(data)
+  } */
+  const onSubmit = async (data) => {
+    console.log(data)
+    setLoading(true);
+    await fetch('/api/registerUser', {
+      method: 'POST', body: JSON.stringify({
+        email: props.tempUser.email,
+        password: await hash(props.tempUser.password, 10),
+        firstName: firstName,
+        lastName: lastName,
+        profilePic: 'none',
+        address: {
+          province: props.address.province,
+          district: props.address.district,
+          neighborhood: props.address.neighborhood
+        }
+
+      })
+    }).then(res => {
+
+      alert(res.status);
+      setLoading(false);
+      //signIn()
+      setRegister(true)
+
+    }).catch(error => {
+      alert(error);
+      setLoading(false)
+    })
+
+
+  }
+  console.log('errors')
   return (
     <Box>
-      <Box sx={{ fontWeight: '700', fontStyle: 'italic', fontSize: '22px' }}>LET'S GET TO KNOW YOU</Box>
-      <br />
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Box sx={{ position: 'relative', '&:hover': { cursor: 'pointer' } }} onClick={() => alert("WORK IN PROGRESS")}>
-          <Box sx={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'gray', position: 'absolute', bottom: 0, right: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{camera}</Box>
-          <Box sx={{ width: '88px', height: '88px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="bg-gradient-to-r from-teal-400 to-cyan-500">
-            <Box sx={{ fontWeight: '700', color: 'white', fontSize: '42px' }}>{word?word:user}</Box>
+      {!loading ? !isRegister ? <Box>
+        <Box sx={{ fontWeight: '700', fontStyle: 'italic', fontSize: '22px' }}>LET'S GET TO KNOW YOU</Box>
+        <br />
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Box sx={{ position: 'relative', '&:hover': { cursor: 'pointer' } }} onClick={() => alert("WORK IN PROGRESS")}>
+            <Box sx={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'gray', position: 'absolute', bottom: 0, right: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{camera}</Box>
+            <Box sx={{ width: '88px', height: '88px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="bg-gradient-to-r from-teal-400 to-cyan-500">
+              <Box sx={{ fontWeight: '700', color: 'white', fontSize: '42px' }}>{word ? word : user}</Box>
+            </Box>
+
           </Box>
-
         </Box>
-      </Box>
-      <Box sx={{ textAlign: 'center',fontWeight:'600' }}>UPLOAD PROFILE PICTURE</Box>
+        <Box sx={{ textAlign: 'center', fontWeight: '600' }}>UPLOAD PROFILE PICTURE</Box>
 
-      <br />
-      <Input placeholder='First Name' sx={styles.textArea} onChange={(e) => setWord(e.target.value.substring(0, 1).toUpperCase())} className='placeholder:text-black h-12 ' />
-      <br />
-      <Input placeholder='Last Name' sx={styles.textArea} className='placeholder:text-black h-12 '/>
-      <br />
-      <Button sx={{float:'right'}} className="bg-gradient-to-r from-teal-400 to-cyan-500">Continue</Button>
+        <br />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Input {...register("firstName", {
 
+            pattern: {
+              value: /^[a-zA-Z]/,
+              message: 'Please enter a valid email',
+            }
+          })} sx={styles.textArea} placeholder='First Name' name='first name' className='placeholder:text-black h-12 ' onChange={(e) => { setFirstName(e.target.value); setWord(e.target.value.substring(0, 1).toUpperCase()) }}></Input>
+          <br />
+          <Input {...register("lastName", {
 
+            pattern: {
+              value: /^[a-zA-Z]/,
+              message: 'Please enter a valid email',
+            }
+          })} sx={styles.textArea} name='last name' placeholder='Last Name' className='placeholder:text-black h-12' onChange={(e) => { setLastName(e.target.value) }}></Input>
+
+          {errors?.firstName?.type === "required" && (
+            <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}><div style={{ display: 'flex' }}>{danger} First Name is required</div></div></p>
+          )}
+          {errors?.lastName?.type === "required" && (
+            <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}><div style={{ display: 'flex' }}>{danger} Last Name is required</div></div></p>
+          )}
+          <Button sx={{ float: 'right' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handleSubmit()}>Continue</Button>
+        </form>
+      </Box>:<Box>SUCCESSFULLY REGISTERED</Box> : <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}><DotLoader color='#14B8A6' size={30} /></Box>
+      }
     </Box>
   )
 }
@@ -46,6 +117,6 @@ const styles = {
     border: 'none',
     color: 'black',
 
-},
+  },
 }
 export default EnterUserInfo

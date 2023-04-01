@@ -1,4 +1,3 @@
-
 import React from "react";
 //import { Container, Box } from "theme-ui";
 import Post from "../../../Components/Post/Post.js";
@@ -16,12 +15,12 @@ export default async function Page() {
         <ul style={{ width: '42em' }}>
             <UserPost />
 
-            {posts?posts?.map(({ fullname, profilePic, text, image, location, date, likes }, index) => (
-                <React.Fragment>
-                    <li key={index}><Post fullname={fullname} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
+            {posts ? posts?.map(({ fullname, profilePic, text, image, location, date, likes }, index) => (
+                <li key={index}>
+                    <li ><Post fullname={fullname} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
                     <br />
-                </React.Fragment>
-            )):<div>WE CANT FIND POSTS</div>}
+                </li>
+            )) : <div>WE CANT FIND POSTS</div>}
 
 
         </ul>

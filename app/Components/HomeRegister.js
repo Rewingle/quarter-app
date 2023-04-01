@@ -4,7 +4,6 @@ import { Box, Button, Container, Input, Flex, Select } from 'theme-ui'
 import { signIn } from 'next-auth/react';
 import DotLoader from 'react-spinners/DotLoader'
 import SelectAddress from './SelectAddress';
-import { sign } from 'crypto';
 import { useForm } from 'react-hook-form'
 //import { MongoClient } from 'mongodb';
 
@@ -26,12 +25,13 @@ function Login() {
         watch,
         formState: { errors }
     } = useForm();
+    
     const onSubmit = async (data) => {
         setLoading(true);
         await fetch('/api/auth/checkUser', {
             method: 'POST', body: JSON.stringify({
                 email: data.email,
-                password: data.password
+           
             })
         }).then(res => {
             if (res.status == 422) {
