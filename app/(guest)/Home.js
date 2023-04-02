@@ -18,7 +18,7 @@ function Home() {
 
     return (
 
-        <div>
+        <Box>
             <Box sx={styles.header}>
                 <Box sx={styles.headerContainer}>
                     <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quarterlogo-mini.png' width={128} height={64} style={styles.logo}></Image>
@@ -93,7 +93,7 @@ function Home() {
             </Box>
 
             <Footer />
-        </div>
+        </Box>
 
     )
 }

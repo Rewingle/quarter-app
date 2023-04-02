@@ -49,8 +49,6 @@ function EnterUserInfo(props) {
 
       })
     }).then(res => {
-
-      alert(res.status);
       setLoading(false);
       //signIn()
       setRegister(true)
