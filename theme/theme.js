@@ -28,7 +28,7 @@ export default {
     colors: {
       text: '#000',
       background: '#fff',
-      primary: '#07c',
+      primary: '#06b6d4',
       secondary: '#30c',
       muted: '#f6f6f6',
     },

@@ -2,6 +2,7 @@
 import './globals.css'
 import { SessionProvider } from "next-auth/react"
 import { ThemeProvider } from 'theme-ui'
+import theme from '../theme/theme'
 
 export default function RootLayout({ children }) {
 
@@ -17,7 +18,7 @@ export default function RootLayout({ children }) {
 
 
                     <main>
-                        <ThemeProvider>{children}</ThemeProvider>
+                        <ThemeProvider theme={theme}>{children}</ThemeProvider>
                     </main>
 
 
