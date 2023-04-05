@@ -3,9 +3,12 @@ import { signIn } from "next-auth/react";
 import { Input, Button, Box, Checkbox, Label } from "theme-ui";
 import Link from "next/link";
 import { useForm } from 'react-hook-form'
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const LoginPage = () => {
-
+    
     const onSubmit = async (data) => {
 
         await signIn("credentials", {

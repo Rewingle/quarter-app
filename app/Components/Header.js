@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 import { Box, Container, Flex, Image, Input } from 'theme-ui';
 import Sticky from 'react-stickynode'
 import Link from 'next/link';
-import {signOut } from "next-auth/react"
+import { signOut } from "next-auth/react"
+import { useSession } from "next-auth/react";
+import ProfilePicHolder from './ProfilePicHolder';
 
 
-export default function Header() {
+export default function Header(props) {
     const homeIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 text-neutral-900">
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
     </svg>
@@ -41,8 +43,9 @@ export default function Header() {
     </svg>
 
     const [mobileMenu, setMobileMenu] = useState(false);
-
+    const [minilogo,setMiniLogo] = useState(false)
     const [accountMenu, toggleAccountMenu] = useState(false)
+
 
     const toggleMobileMenu = () => {
         setMobileMenu(!mobileMenu)
@@ -52,6 +55,7 @@ export default function Header() {
     }
     const closeMobileMenu = () => {
         setMobileMenu(false);
+        setMiniLogo(!minilogo)
     };
     return (
         <Box>
@@ -66,9 +70,10 @@ export default function Header() {
                             <Box className='headerInner' sx={styles.headerInner}>
 
                                 <Box sx={styles.logo}>
-                                    
+
                                     <Link href="/feed">
-                                        <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quarterlogo.png' alt="lookal logo" sx={styles.logoStyle} />
+                                        <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quartermini-big.png' alt="quarter logo" width={50} height={50} sx={styles.miniLogoStyle} />
+                                        <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/quarterlogo.png' alt="quarter logo" sx={styles.logoStyle} />
                                     </Link>
                                 </Box>
 
@@ -104,9 +109,10 @@ export default function Header() {
                                         <div style={{ backgroundColor: 'dimgray', borderRadius: '50%', zIndex: 50, bottom: 0, right: 0, height: '14px', width: '14px', position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             {dropArrow}
                                         </div>
-                                        <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />
+                                        {!props.profilePic ? <ProfilePicHolder height={44} width={44} character={props.name.substring(0, 1).toUpperCase()} />
+                                            :
+                                            <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
                                     </Container>
-
 
                                 </Box>
                                 <Box sx={styles.mobileMenu}>
@@ -124,8 +130,11 @@ export default function Header() {
             {accountMenu ? <Box sx={styles.accountMenu}>
                 <Box sx={styles.menuItems}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />
-                        <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>Mehmet Ali Kul</Box>
+
+                        {!props.profilePic ? <ProfilePicHolder height={44} width={44} character={props.name.substring(0, 1).toUpperCase()} />
+                            :
+                            <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
+                        <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>{props.name}</Box>
                     </Box>
                     <br />
                     <hr />
@@ -134,7 +143,7 @@ export default function Header() {
                         <Link href='/user/dummy'><li>{account} <div>Profile</div></li></Link>
                         <Link href='/settings'><li>{settings} <div>Settings</div> </li></Link>
                         <Link href='/support'><li>{help} <div>Help and Support</div></li></Link>
-                        <li onClick={() => {signOut({callbackUrl: '/'})}}>{logout}<div>Log out</div></li>
+                        <li onClick={() => { signOut({ callbackUrl: '/' }) }}>{logout}<div>Log out</div></li>
                     </ul>
                 </Box>
             </Box> : null}
@@ -219,7 +228,9 @@ const styles = {
         display: 'flex',
         justifyContent: 'right',
         alignItems: 'center',
+       
     },
+    
     navbar: {
         flexGrow: 1,
         justifyContent: 'center',
@@ -266,6 +277,17 @@ const styles = {
         width: '8em',
         ':hover': {
             cursor: 'pointer'
+        },
+        '@media only screen and (max-width: 768px)': {
+            display:'none'
+        }
+    },
+    miniLogoStyle:{
+        display:'none',
+        float:'left',
+        marginRight:'2em',
+        '@media only screen and (max-width: 768px)': {
+            display:'block'
         }
     },
     accountMenu: {

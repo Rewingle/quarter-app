@@ -25,7 +25,7 @@ export const authOptions = {
         },
       }),
     ], */
-  session: {
+   session: {
     jwt: true,
   },
   providers: [
@@ -49,17 +49,36 @@ export const authOptions = {
         if (!isValid) {
           throw new Error('Could not log you in!');
         }
-
+        console.log(user)
         //client.close();
-        return { email: user.email };
+        return { name: user.firstName +' '+ user.lastName, email: user.email, image:user.profilePic }
       },
     }),
   ],
-
+  
   pages: {
     signIn: "/auth/login",
     error: '/auth/login'
   },
+ 
+ /*  callbacks: {
+    
+    
+
+    async session({ session, token, user }) {
+      session.userID = token.id;
+      session.userName = token.userName;
+
+      session.fullname = token.fullname;
+
+      //I also tried it this way, according to the docs at:
+      //  https://next-auth.js.org/configuration/callbacks
+      session.user.userID = token.id;
+      session.user.fullname = token.fullname;
+
+      return session;
+    }
+  }, */
 };
 
 export default NextAuth(authOptions);

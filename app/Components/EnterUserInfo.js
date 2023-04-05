@@ -40,7 +40,7 @@ function EnterUserInfo(props) {
         password: await hash(props.tempUser.password, 10),
         firstName: firstName,
         lastName: lastName,
-        profilePic: 'none',
+        profilePic: null,
         address: {
           province: props.address.province,
           district: props.address.district,
