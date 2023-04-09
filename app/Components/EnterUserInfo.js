@@ -103,7 +103,7 @@ function EnterUserInfo(props) {
           )}
           <Button sx={{ float: 'right' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handleSubmit()}>Continue</Button>
         </form>
-      </Box>:<Box>SUCCESSFULLY REGISTERED</Box> : <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}><DotLoader color='#14B8A6' size={30} /></Box>
+      </Box>:<Box sx={{fontStyle:'italic',fontWeight:'600', textAlign:'center'}}>SUCCESSFULLY REGISTERED</Box> : <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}><DotLoader color='#14B8A6' size={30} /></Box>
       }
     </Box>
   )

@@ -5,6 +5,7 @@ import { Box, Container } from 'theme-ui'
 import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default function LoggedLayout({ children }) {
 
@@ -21,7 +22,7 @@ export default function LoggedLayout({ children }) {
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
     }
 
-    const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+    const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
     </svg>
@@ -45,24 +46,27 @@ export default function LoggedLayout({ children }) {
     const notifications = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 text-neutral-900">
         <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
     </svg>
- 
+    const fullname = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
+    const province = session.user.name.split(',')[2]
+    const district = session.user.name.split(',')[3]
+    const neighborhood = session.user.name.split(',')[4]
     return (
         <React.Fragment>
-            <Header name={session.user.name} profilePic={session.user.profilePic} />
+            <Header name={fullname} profilePic={session.user.profilePic} />
             <Box as="section" id="feed" sx={styles.grid}>
                 <Box sx={styles.leftBar}>
                     <Box sx={{ position: 'fixed' }}>
-                        <div style={{ float: 'right' }}><span style={{ float: 'left' }}>{locationIcon}</span><span>ACIBADEM KADIKOY</span></div>
-                        <ul style={styles.leftBarList}>
+                        <Box sx={{ float: 'right', position: 'absolute', display: 'flex' }}><span style={{ float: 'left' }}>{locationIcon}</span><span>{neighborhood + ' ' + district}</span></Box>
+                        <Box sx={{ marginTop: '6em' }}>
+                            <ul style={styles.leftBarList}>
 
-                            <a href=""><li><div >{homeIcon}</div><span></span><div>Home</div></li></a>
-                            <a href=""><li><div >{bell}</div><span></span><div>Notifications</div></li></a>
-                            <a href=""><li><div >{message}</div><span></span><div>Messages</div></li></a>
-                            <a href=""><li><div >{store}</div><span></span><div>Business</div></li></a>
-                        </ul>
-
+                                <Box><Link href=""><li><div >{homeIcon}</div><span></span><div>Home</div></li></Link></Box>
+                                <Box><Link href=""><li><div >{bell}</div><span></span><div>Notifications</div></li></Link></Box>
+                                <Box><Link href=""><li><div >{message}</div><span></span><div>Messages</div></li></Link></Box>
+                                <Box><Link href=""><li><div >{store}</div><span></span><div>Business</div></li></Link></Box>
+                            </ul>
+                        </Box>
                     </Box>
-
 
                 </Box>
                 <Box sx={styles.feedBar}>
@@ -74,14 +78,14 @@ export default function LoggedLayout({ children }) {
                 </Box>
 
 
-
                 <Box sx={styles.rightBar}>
                     <Box sx={styles.rightBarContainer}>
                         <Container sx={styles.rightBarInner}>
                             <ul>
-                                <li>-PEOPLE YOU MAY KNOW</li>
-                                <li>-ADS</li>
-                                <li>-SHOWCASE BANNER</li>
+                                <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'red', borderRadius: '8px' }}></Box></li>
+                                <br />
+                                <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'purple', borderRadius: '8px' }}></Box></li>
+                                <li>-NEARBY PEOPLE</li>
                             </ul>
 
                         </Container>
@@ -92,10 +96,10 @@ export default function LoggedLayout({ children }) {
             <Box sx={styles.mobileFooter}>
                 <Box>
                     <Box style={styles.content}>
-                        <Box sx={{ px: 3, '&:hover':{cursor:'pointer'} }}><Box sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>{homeIcon}</Box>Home</Box>
-                        <Box sx={{ px: 3, '&:hover':{cursor:'pointer'}  }}><Box sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>{discover}</Box>Discover</Box>
-                        <Box sx={{ px: 3, '&:hover':{cursor:'pointer'}  }}><Box sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>{store}</Box>Business</Box>
-                        <Box sx={{ px: 3, '&:hover':{cursor:'pointer'}  }}><Box sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>{notifications}</Box>Notifications</Box>
+                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{homeIcon}</Box>Home</Box>
+                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{discover}</Box>Discover</Box>
+                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{store}</Box>Business</Box>
+                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{notifications}</Box>Notifications</Box>
 
                     </Box>
                 </Box>
@@ -118,18 +122,12 @@ const styles = {
         '& li': {
             justifyContent: 'right',
             display: 'flex',
-            flexDirection: 'row',
-            '&:span': {
-                flexGrow: 1,
-            },
-            '&:div': {
-                flexGrow: 0,
-            },
             marginTop: 2,
             width: '8em',
             borderRadius: '1em 1em 1em 1em',
             transition: '0.3s',
             px: 3,
+
             '&:hover': {
                 backgroundColor: 'gainsboro',
 
@@ -147,13 +145,17 @@ const styles = {
     },
     leftBarList: {
         fontSize: '24px',
-        marginTop: '4em',
         height: '10em',
-
+        width: '7em',
+        width: '100%',
+        ': div': {
+            backgroundColor: 'red'
+        }
     },
     rightBar: {
         display: ['none', 'none', 'none', 'block', 'block'],
-        p: 3,
+        py: 3,
+
 
     },
     rightBarContainer: {
@@ -161,7 +163,7 @@ const styles = {
         height: '100vh'
     },
     mobileFooter: {
-        display:'none',
+        display: 'none',
         position: 'fixed',
         width: '100vw',
         backgroundColor: 'red',
@@ -171,7 +173,7 @@ const styles = {
         backgroundColor: 'white',
         boxShadow: '4px 4px 8px 4px rgba(0, 0, 0, 0.25)',
         '@media only screen and (max-width: 768px)': {
-            display:'block'
+            display: 'block'
         }
     },
     content: {
@@ -179,7 +181,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         height: '4em',
-        fontSize:'14px',
+        fontSize: '14px',
         '& li': {
             marginleft: '1em'
         }

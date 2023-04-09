@@ -51,7 +51,8 @@ export const authOptions = {
         }
         console.log(user)
         //client.close();
-        return { name: user.firstName +' '+ user.lastName, email: user.email, image:user.profilePic }
+        //NAME : FIRST NAME , LASTNAME , PROVINCE , DISTRICT , NEIGHBORHOOD 
+        return { name: user.firstName +','+ user.lastName +','+user.address.province+','+user.address.district+','+user.address.neighborhood, email: user.email, image:user.profilePic }
       },
     }),
   ],
