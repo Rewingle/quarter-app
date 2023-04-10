@@ -17,7 +17,7 @@ export default async function Page() {
 
             {posts ? posts?.map(({ _id,fullName, userName, profilePic, text, image, comments, location, date, likes }, index) => (
                 <li key={index}>
-                    <li ><Post id={_id} comments={comments} fullName={fullName} userName={userName} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
+                    <li ><Post postId={_id} comments={comments} fullName={fullName} userName={userName} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
                     <br />
                 </li>
             )) : <div>WE CANT FIND POSTS</div>}

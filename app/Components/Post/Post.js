@@ -27,8 +27,7 @@ function Post(props) {
 
     const handleShowComments = async () => {
         setShowComments(!showComments)
-        const res = await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) }).catch(err => alert(err))
-
+        console.log(props.comments)
     }
 
     return (
@@ -49,14 +48,14 @@ function Post(props) {
                 </Box>
                 <Box sx={{ float: 'right' }}>{more}</Box>
             </Box>
-
+           
 
             <Container sx={{ p: 1 }}>{props.text}</Container>
             {props.image ? <Box>
                 <img src={props.image}></img>
             </Box> : null}
 
-            <Box sx={{ marginBottom: '22px', mt: 1 }}>
+            <Box sx={{ mt: 1 }}>
                 <Box sx={{ display: 'flex', marginBottom: '1em', float: 'right' }}>
                     <Box sx={{ display: 'flex', p: 1, borderRadius: '16px', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span>{like}</span> <span style={{ marginLeft: '0.4em' }}>{props.likes}</span></Box>
 
@@ -65,25 +64,33 @@ function Post(props) {
                 </Box>
 
             </Box>
+            <hr style={{ marginTop: '1.4em' }} />
             {showComments ?
                 <Box>
-                    <hr />
-                    <Box sx={{ mt: 4 }}>
-                        <Box sx={{display:'flex',justifyContent:'right'}}>
-                            <Box sx={{mr:2}}>
-                                <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600 }}>{props.comments[0].fullName}</Box>
-                                <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#f8f8f8', p: 1, fontSize: '15px', borderRadius: '12px' }}>{props.comments[0].text}</Box>
+                    {props.comments?props.comments.map(({fullName, text},userName)=>(
+                        <Box sx={{ mt: '30px' }} key={userName}>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+
+                            <Box sx={{ mr: 2 }}>
+                                <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600,':hover':{cursor:'pointer',textDecoration:'underline'} }}>{fullName}</Box>
+                                <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#f8f8f8', p: 1, fontSize: '15px', borderRadius: '12px' }}>{text}</Box>
+                                <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>Date</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex',justifyContent:'center',alignItems:'center', ml:2}}>{more}</Box></Box>
+                                
                             </Box>
                             <ProfilePicHolder width={44} height={44} character={'A'} />
                         </Box>
                     </Box>
+                    )):null}
+                    
                 </Box>
                 :
                 null
             }
-            <br/>
-            <hr />
-            <Comment profilePic={props.profilePic} character={props.fullName} />
+
+
+
+            <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName}  />
         </Card>
     )
 }
@@ -105,7 +112,7 @@ const styles = {
     },
     fullName: {
         fontWeight: 600,
-        fontSize: '16px',
+        fontSize: '17px',
         '&:hover': {
             textDecoration: 'underline',
             cursor: 'pointer'

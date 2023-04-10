@@ -1,9 +1,10 @@
 'use client'
-import React from 'react'
-import { Box, Input } from 'theme-ui'
-
+import React, { useState } from 'react'
+import { Box, Textarea } from 'theme-ui'
 import ProfilePicHolder from '../ProfilePicHolder'
 import { useSession } from 'next-auth/react'
+import DotLoader from 'react-spinners/DotLoader'
+
 function Comment(props) {
 
     const send = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="w-8 h-8 text-teal-500 hover:cursor-pointer">
@@ -14,25 +15,51 @@ function Comment(props) {
     </svg>
 
     const { data: session } = useSession()
-    const character = session.user.name.split(',')[0].substring().substring(0, 1).toUpperCase()
+    const fullName = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
+    const character = fullName.substring().substring(0, 1).toUpperCase()
+    const userName = session.user.name.split(',')[2]
+
+    const [comment, setComment] = useState(null)
+    const [isLoading, setLoading] = useState(false)
+
+    const handleComment = async (postId, currentComment, fullName, userName) => {
+        if (currentComment != '') {
+            setLoading(true);
+            await fetch('/api/postComment', {
+                method: 'POST', body: JSON.stringify({
+                    postId: postId,
+                    userName: userName,
+                    fullName: fullName,
+                    photo: null,
+                    comment: currentComment
+                })
+            })
+            setLoading(false)
+        }
+        else{
+            alert('asd')
+        }
+
+    }
+
     return (
         <React.Fragment>
-            <Box sx={{ display: 'flex', height: '66px',width:'100%', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', height: '66px', width: '100%', alignItems: 'center' }}>
                 <Box ><ProfilePicHolder width={42} height={42} character={character} /></Box>
                 <Box sx={{ width: '80%' }}>
                     <Box sx={{ position: 'relative' }}>
                         <Box style={styles.inputContainer}>
-                            <Input style={styles.input}
+                            <Textarea sx={styles.input} rows={1} wrap='soft' onChange={(e) => { setComment(e.target.value) }}
                                 placeholder='Add a comment' autofillBackgroundColor="aquarmarine">
-                            </Input>
+                            </Textarea>
                         </Box>
-                        <Box sx={styles.addImage} onClick={() => { alert('addImage') }}>{image}</Box>
+                        <Box sx={styles.addImage} >{image}</Box>
 
                     </Box>
                 </Box>
-                <Box sx={{ marginLeft: '1em' }}>
+                {!isLoading ? <Box sx={{ marginLeft: '1em' }} onClick={() => { handleComment(props.postId, comment, fullName, userName) }}>
                     {send}
-                </Box>
+                </Box> : <Box sx={{ marginLeft: '2em' }}><DotLoader color='#14B8A6' size={18} /></Box>}
 
             </Box>
 
@@ -60,7 +87,12 @@ const styles = {
     input: {
         width: ['85%', '85%', '85%', '90%', '90%', '90%'],
         border: 'none',
-        outline: 'none'
+        outline: 'none',
+        height: '2.6em',
+        resize: 'none',
+        textarea: {
+            resize: 'none'
+        }
     }
 }
 export default Comment
