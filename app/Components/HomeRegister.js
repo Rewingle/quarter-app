@@ -39,6 +39,7 @@ function HomeRegister() {
                 signIn()
             }
             else {
+                console.log(data)
                 setTempUser(data);
 
             }

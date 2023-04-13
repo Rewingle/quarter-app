@@ -60,7 +60,7 @@ function EnterUserInfo(props) {
 
 
   }
-  console.log('errors')
+
   return (
     <Box>
       {!loading ? !isRegister ? <Box>

@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import ProfilePicHolder from './ProfilePicHolder';
 
 
-export default function Header(props) {
+export default function Header() {
     const homeIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 text-neutral-900">
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
     </svg>
@@ -41,6 +41,15 @@ export default function Header(props) {
     const dropArrow = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.4} stroke="currentColor" className="w-3 h-3 text-teal-50">
         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
     </svg>
+
+
+    const {data: session} = useSession()
+    const fullname = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
+    const userName = session.user.name.split(',')[2]
+    const province = session.user.name.split(',')[3]
+    const district = session.user.name.split(',')[4]
+    const neighborhood = session.user.name.split(',')[5]
+   
 
     const [mobileMenu, setMobileMenu] = useState(false);
     const [minilogo,setMiniLogo] = useState(false)
@@ -109,7 +118,7 @@ export default function Header(props) {
                                         <div style={{ backgroundColor: 'dimgray', borderRadius: '50%', zIndex: 50, bottom: 0, right: 0, height: '14px', width: '14px', position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             {dropArrow}
                                         </div>
-                                        {!props.profilePic ? <ProfilePicHolder height={44} width={44} character={props.name.substring(0, 1).toUpperCase()} />
+                                        {!session.user.image ? <ProfilePicHolder height={44} width={44} character={fullname.substring(0, 1).toUpperCase()} />
                                             :
                                             <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
                                     </Container>
@@ -131,16 +140,16 @@ export default function Header(props) {
                 <Box sx={styles.menuItems}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
 
-                        {!props.profilePic ? <ProfilePicHolder height={44} width={44} character={props.name.substring(0, 1).toUpperCase()} />
+                        {!session.user.image ? <ProfilePicHolder height={44} width={44} character={fullname.substring(0, 1).toUpperCase()} />
                             :
                             <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
-                        <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>{props.name}</Box>
+                        <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>{fullname}</Box>
                     </Box>
                     <br />
                     <hr />
 
                     <ul style={{ fontSize: '18px' }}>
-                        <Link href='/user/dummy'><li>{account} <div>Profile</div></li></Link>
+                        <Link href={'/user/'+userName}><li>{account} <div>Profile</div></li></Link>
                         <Link href='/settings'><li>{settings} <div>Settings</div> </li></Link>
                         <Link href='/support'><li>{help} <div>Help and Support</div></li></Link>
                         <li onClick={() => { signOut({ callbackUrl: '/' }) }}>{logout}<div>Log out</div></li>

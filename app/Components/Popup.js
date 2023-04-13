@@ -1,4 +1,5 @@
 import React from 'react'
+import { Box } from 'theme-ui'
 
 function Popup(props) {
     const closeIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -6,15 +7,15 @@ function Popup(props) {
     </svg>
 
     return (props.trigger) ? (
-        <div style={styles.popup}>
-            <div style={styles.popupInner}>
-                <div style={styles.closeBtn} onClick={() => { props.setTrigger(false) }}>{closeIcon}</div>
-                <div style={styles.content}>
+        <Box style={styles.popup}>
+            <Box sx={styles.popupInner}>
+                <Box sx={styles.closeBtn} onClick={() => { props.setTrigger(false) }}>{closeIcon}</Box>
+                <Box sx={styles.content}>
                     {props.children}
-                </div>
+                </Box>
 
-            </div>
-        </div>
+            </Box>
+        </Box>
     ) : null
 }
 
@@ -27,7 +28,7 @@ const styles = {
         width: '100%',
         height: '100vh',
         backgroundColor: 'rgba(0,0,0,0.2)',
-
+        
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
@@ -37,6 +38,7 @@ const styles = {
         padding: '2em',
         width: '100%',
         maxWidth: '640px',
+        
         backgroundColor: 'white',
         borderRadius: '1em'
     },
@@ -47,8 +49,12 @@ const styles = {
         position: 'absolute',
         top: '1em',
         right: '1em',
-        '&:hover': {
-            cursor: 'pointer'
+        p:1,
+        ':hover':{
+            cursor:'pointer',
+            backgroundColor:'rgb(242, 242, 242)',
+            borderRadius:'50%',
+            
         }
     }
 }

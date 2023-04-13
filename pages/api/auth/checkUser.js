@@ -21,6 +21,7 @@ async function handler(req, res) {
         //Send error response if duplicate user is found
         console.log(email)
         if (checkExisting) {
+            console.log(checkExisting)
             const userId = JSON.stringify(checkExisting._id).split("'")[0].split('"')[1]
             res.status(422).json({ message: 'User already exists',userId: userId});
             client.close();
@@ -32,6 +33,7 @@ async function handler(req, res) {
             password: await hash(password, 12),
         }); */
         //Send success response
+        console.log(checkExisting)
         res.status(200).json({ message: 'User is unique'});
         //Close DB connection
         client.close(); 

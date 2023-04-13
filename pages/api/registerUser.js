@@ -4,7 +4,6 @@ async function handler(req, res) {
     //Only POST mothod is accepted
     if (req.method === 'POST') {
         const data = JSON.parse(req.body)
-
         //Getting email and password from body
         //Validate
 
@@ -37,12 +36,12 @@ async function handler(req, res) {
         const isFullNameExist = await db.collection('users').findOne({ firstName: data.firstName, lastName: data.lastName })
 
         if (isFullNameExist) {
-            var userName = null
+            var uniqueUsername = null
             var i = 1
             while (1) {
-                console.log('first')
-                userName = (data.firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '') + i.toString()).toLowerCase()
-                const isUserNameExist = await db.collection('users').findOne({ userName: userName })
+                console.log('found user with this first and last name')
+                uniqueUsername = (data.firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '') + i.toString()).toLowerCase()
+                const isUserNameExist = await db.collection('users').findOne({ userName: uniqueUsername })
                 if (!isUserNameExist) {
                     break
                 }
@@ -54,7 +53,7 @@ async function handler(req, res) {
                     password: data.password,
                     firstName: data.firstName,
                     lastName: data.lastName,
-                    userNAme: userName,
+                    userName: uniqueUsername,
                     address: {
                         province: data.address.province,
                         district: data.address.district,
@@ -64,25 +63,34 @@ async function handler(req, res) {
 
                 }
             )
+            res.status(200).json({ message: 'Register successful' });
+            client.close()
         }
+        const userName = (data.firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '')).toLowerCase()
+        const user = await db.collection('users').insertOne(
+            {
+                email: data.email,
+                password: data.password,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                userName: userName,
+                address: {
+                    province: data.address.province,
+                    district: data.address.district,
+                    neighborhood: data.address.neighborhood
+                }
+
+
+            }
+        )
+       
+        console.log(user)
+
+
+
+
+   
         
-        //Send error response if duplicate user is found
-
-
-
-
-        /*  if (checkExisting) {
-             const userId = JSON.stringify(checkExisting._id).split("'")[0].split('"')[1]
-             res.status(422).json({ message: 'User already exists',userId: userId});
-             client.close();
-             return;
-         } */
-        //Hash password
-        /* const status = await db.collection('users').insertOne({
-            email,
-            password: await hash(password, 12),
-        }); */
-        //Send success response
         res.status(200).json({ message: 'Register successful' });
         //Close DB connection
         client.close();
