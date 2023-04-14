@@ -6,9 +6,13 @@ import Popup from '../Popup'
 import { useSession } from 'next-auth/react'
 import ProfilePicHolder from '../ProfilePicHolder'
 import DotLoader from 'react-spinners/DotLoader'
+import { animated, useSpring } from '@react-spring/web'
 
 function UserPost() {
     const image = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 opacity-60">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+    </svg>
+    const bigImage = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-10 h-10 opacity-70 text-green-800">
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
     </svg>
     const add = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
@@ -25,17 +29,49 @@ function UserPost() {
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
     </svg>
+    const remove = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+
 
     //SET USER INFO
     const { data: session } = useSession()
     const fullName = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
     const userName = session.user.name.split(',')[2]
     const address = session.user.name.split(',')[5] + ',' + session.user.name.split(',')[4]
-
+    const profilePic = session.user.image
 
     const [text, setText] = useState(null)
     const [isLoading, setLoading] = useState(false)
     const [buttonPopup, setButtonPopup] = useState(false)
+    const [isTagSelected, setTagSelected] = useState(false)
+    const [isAddPhotoSelected, setAddPhotoSelected] = useState(false)
+    const [tagColor, setTagColor] = useState("black")
+
+    //REACT SPRING
+    const tagSlide = useSpring({
+        height: isTagSelected ? 100 : 0,
+    })
+    const photoSlide = useSpring({
+        height: isAddPhotoSelected ? 100 : 0,
+    })
+
+    //TAGS
+    const tags = [
+        { name: 'Help' },
+        { name: 'Advice' },
+        { name: 'Missing' },
+        { name: 'Sale' },
+        { name: 'Meeting' },
+        { name: 'Education' },
+        { name: 'Childcare' },
+        { name: 'Government' },
+        { name: 'Nature' },
+        { name: 'Mechanic' },
+        { name: 'Question' }
+    ]
+    const [clickedTag, setClickedTag] = useState([])
+    const [selectedTags, setSelectedTags] = useState([])
 
     //GET CURRENT DATE
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
@@ -45,16 +81,17 @@ function UserPost() {
     const date = `${current.getDate()} ${monthNames[current.getMonth()]}`;
 
     const handlePost = async (text) => {
-        if (text != '') {
+        if (text != null) {
             setLoading(true);
-            await fetch('/api/postComment', {
+            await fetch('/api/addPost', {
                 method: 'POST', body: JSON.stringify({
                     date: date,
                     likes: 0,
                     location: address,
-                    profilePic: null,
+                    profilePic: profilePic,
                     text: text,
-                    comment: [],
+                    tags: selectedTags,
+                    comments: [],
                     userName: userName,
                     fullName: fullName
                 })
@@ -66,7 +103,17 @@ function UserPost() {
         }
 
     }
+    const handleRemoveTag = (name) => {
 
+        const newTags = selectedTags.filter(item => item !== name)
+        setSelectedTags(newTags)
+    }
+    const handleAddTag = (name) => {
+        if (selectedTags.length == 3) {
+            return
+        }
+        setSelectedTags(previous => [...previous, name])
+    }
     return (
         <Box sx={styles.main}>
 
@@ -86,6 +133,7 @@ function UserPost() {
                 </Card>
 
                 <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+                    <Box sx={{ display: 'flex', mb: '0.4em' }}>{selectedTags[0] ? <Box sx={{ opacity: '0.6', fontSize: '15px', fontWeight: '600' }}>Tags;</Box> : null}{selectedTags.map(name => <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', ':hover': { cursor: 'pointer' }, fontWeight: '600', opacity: 0.6 }} onClick={() => { handleRemoveTag(name) }}>{remove}{name}</Box>)}</Box>
                     {!isLoading ?
                         <form>
 
@@ -95,27 +143,83 @@ function UserPost() {
                                     placeholder='What are you thinking?' autofillBackgroundColor="aquarmarine">
                                 </Textarea>
                             </Box>
+                            <animated.div
+                                style={{
+                                    width: '100%',
+                                    marginTop: '0.5em',
+                                    borderRadius: '1em',
+                                    overflow: 'hidden',
+                                    height: tagSlide.height,
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap'
+                                }} >
+                                    <Box sx={{ color: '#F24405', p: 2, mr: 2 }}>{tag}</Box>
+                                    {tags.map(tag => (
+                                        <Box name={tag.name} onClick={() => {
+                                            selectedTags.includes(tag.name) ?
+                                                handleRemoveTag
+                                                :
+                                                handleAddTag(tag.name)
+
+                                        }} sx={{
+
+                                            margin: '0 1em 1em 0',
+                                            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            p: 2,
+                                            opacity: 0.7,
+                                            fontWeight: '600',
+                                            borderRadius: '1em',
+                                            ':hover': { opacity: 1, cursor: 'pointer' }
+                                        }}><Box sx={{ fontWeight: '600' }}>{tag.name}</Box></Box>
+                                    ))}
+                                </Box>
+                            </animated.div>
+                            <animated.div
+                                style={{
+                                    width: '100%',
+                                    marginTop: '0.5em',
+                                    borderRadius: '1em',
+                                    overflow: 'hidden',
+                                    height: photoSlide.height,
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <Box sx={{ p: 1 }} >
+                                    <Box onClick={() => { alert('WORKING IN PROGRESS') }} sx={{ border: '4px solid green', borderStyle: 'dotted', borderRadius: '1em', height: '5em', width: '100%', opacity: '0.6', display: 'flex', justifyContent: 'center', alignItems: 'center', ':hover': { cursor: 'pointer' } }}>{bigImage} <Box sx={{ color: '#3B8C66', fontWeight: '600', ml: 2 }}>ADD IMAGE</Box> </Box>
+
+                                </Box>
+                            </animated.div>
 
                             <Box sx={styles.buttonsContainer}>
-                                <Box sx={{ display: 'flex', alignItems: 'center',width:['10em','10em','10em',null,null], opacity: 0.7, backgroundColor: '#3B8C66', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{image}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ADD PHOTO </Box></Box>
-                                <Box sx={{ ml: [0, 0, 0, 3, 3],mt:[3,3,3,0,0],width:['8em','8em','8em',null,null], display: 'flex', alignItems: 'center', opacity: 0.7, backgroundColor: '#F24405', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{tag}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ADD TAG </Box></Box>
-                                <Box sx={{ ml: [0, 0, 0, 3, 3],mt:[3,3,3,0,0],width:['12em','12em','12em',null,null], display: 'flex', alignItems: 'center', opacity: 0.7, backgroundColor: '#7A577A', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{event}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ORGANISE EVENT </Box></Box>
+                                <Box onClick={() => { setAddPhotoSelected(!isAddPhotoSelected) }} sx={{ display: 'flex', alignItems: 'center', width: ['10em', '10em', '10em', null, null], opacity: 0.7, backgroundColor: '#3B8C66', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{image}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ADD PHOTO </Box></Box>
+                                <Box onClick={() => { setTagSelected(!isTagSelected) }} sx={{ ml: [0, 0, 0, 3, 3], mt: [3, 3, 3, 0, 0], width: ['8em', '8em', '8em', null, null], display: 'flex', alignItems: 'center', opacity: 0.7, backgroundColor: '#F24405', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{tag}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ADD TAG </Box></Box>
+                                <Box sx={{ ml: [0, 0, 0, 3, 3], mt: [3, 3, 3, 0, 0], width: ['12em', '12em', '12em', null, null], display: 'flex', alignItems: 'center', opacity: 0.7, backgroundColor: '#7A577A', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{event}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ORGANISE EVENT </Box></Box>
 
                             </Box>
+
                             <br />
-                            <Box sx={{fontSize:'14px',color:'#06b6d4',fontWeight:'600'}}>Your location:</Box>
-                            <Box sx={{ display: 'flex',width:'100%' }}>
-                                
-                                <Box sx={{ display: 'flex',width:'80%',fontSize:'14px',alignItems:'center' }}>{locationIcon}{address}</Box>
-                                <Box sx={{width:'20%'}}><Button sx={{ fontWeight: '600',float:'right' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handlePost(text)}>POST</Button></Box>
+
+                            <Box sx={{ fontSize: '14px', color: '#06b6d4', fontWeight: '600' }}>Your location:</Box>
+                            <Box sx={{ display: 'flex', width: '100%' }}>
+
+                                <Box sx={{ display: 'flex', width: '80%', fontSize: '14px', alignItems: 'center' }}>{locationIcon}{address}</Box>
+                                <Box sx={{ width: '20%' }}><Button sx={{ fontWeight: '600', float: 'right', width: '6em' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={(e) => { handlePost(text) }}>POST</Button></Box>
                             </Box>
                         </form> : <DotLoader color='#14B8A6' size={32} />}
+                    <Box sx={{ width: '20%' }}><Button sx={{ fontWeight: '600', float: 'right', width: '6em' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={(e) => { console.log(selectedTags) }}>POST</Button></Box>
+
                 </Popup>
             </Flex>
 
 
 
-        </Box>
+        </Box >
     )
 }
 
@@ -161,9 +265,13 @@ const styles = {
     buttonsContainer: {
         display: ['block', 'block', 'block', 'flex', 'flex'],
         mt: 3,
+    },
+    tag: {
+
     }
 
 
 }
+
 
 export default UserPost
