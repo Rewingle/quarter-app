@@ -43,16 +43,16 @@ export default function Header() {
     </svg>
 
 
-    const {data: session} = useSession()
+    const { data: session } = useSession()
     const fullname = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
     const userName = session.user.name.split(',')[2]
     const province = session.user.name.split(',')[3]
     const district = session.user.name.split(',')[4]
     const neighborhood = session.user.name.split(',')[5]
-   
+
 
     const [mobileMenu, setMobileMenu] = useState(false);
-    const [minilogo,setMiniLogo] = useState(false)
+    const [minilogo, setMiniLogo] = useState(false)
     const [accountMenu, toggleAccountMenu] = useState(false)
 
 
@@ -118,7 +118,7 @@ export default function Header() {
                                         <div style={{ backgroundColor: 'dimgray', borderRadius: '50%', zIndex: 50, bottom: 0, right: 0, height: '14px', width: '14px', position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             {dropArrow}
                                         </div>
-                                        {!session.user.image ? <ProfilePicHolder height={44} width={44} character={fullname.substring(0, 1).toUpperCase()} />
+                                        {session.user.image.length == 1 ? <ProfilePicHolder height={44} width={44} character={session.user.image} />
                                             :
                                             <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
                                     </Container>
@@ -140,7 +140,7 @@ export default function Header() {
                 <Box sx={styles.menuItems}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
 
-                        {!session.user.image ? <ProfilePicHolder height={44} width={44} character={fullname.substring(0, 1).toUpperCase()} />
+                        {session.user.image.length == 1? <ProfilePicHolder height={44} width={44} character={session.user.image} />
                             :
                             <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
                         <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>{fullname}</Box>
@@ -149,7 +149,7 @@ export default function Header() {
                     <hr />
 
                     <ul style={{ fontSize: '18px' }}>
-                        <Link href={'/user/'+userName}><li>{account} <div>Profile</div></li></Link>
+                        <Link href={'/user/' + userName}><li>{account} <div>Profile</div></li></Link>
                         <Link href='/settings'><li>{settings} <div>Settings</div> </li></Link>
                         <Link href='/support'><li>{help} <div>Help and Support</div></li></Link>
                         <li onClick={() => { signOut({ callbackUrl: '/' }) }}>{logout}<div>Log out</div></li>
@@ -237,9 +237,9 @@ const styles = {
         display: 'flex',
         justifyContent: 'right',
         alignItems: 'center',
-       
+
     },
-    
+
     navbar: {
         flexGrow: 1,
         justifyContent: 'center',
@@ -288,15 +288,15 @@ const styles = {
             cursor: 'pointer'
         },
         '@media only screen and (max-width: 768px)': {
-            display:'none'
+            display: 'none'
         }
     },
-    miniLogoStyle:{
-        display:'none',
-        float:'left',
-        marginRight:'2em',
+    miniLogoStyle: {
+        display: 'none',
+        float: 'left',
+        marginRight: '2em',
         '@media only screen and (max-width: 768px)': {
-            display:'block'
+            display: 'block'
         }
     },
     accountMenu: {

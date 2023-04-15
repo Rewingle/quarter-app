@@ -22,6 +22,8 @@ function EnterUserInfo(props) {
   const [lastName, setLastName] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isRegister, setRegister] = useState(false)
+  const [isImageUploaded,setImageUploaded] = useState(false)
+
   const {
     register,
     handleSubmit,
@@ -32,7 +34,7 @@ function EnterUserInfo(props) {
     alert(data)
   } */
   const onSubmit = async (data) => {
-    console.log(data)
+    const character = firstName.substring(0, 1).toUpperCase()
     setLoading(true);
     await fetch('/api/registerUser', {
       method: 'POST', body: JSON.stringify({
@@ -40,7 +42,7 @@ function EnterUserInfo(props) {
         password: await hash(props.tempUser.password, 10),
         firstName: firstName,
         lastName: lastName,
-        profilePic: null,
+        profilePic: isImageUploaded? isImageUploaded : character,
         address: {
           province: props.address.province,
           district: props.address.district,

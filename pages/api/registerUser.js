@@ -25,7 +25,9 @@ async function handler(req, res) {
             }
         
         */
-
+        const firstName = data.firstName
+        const userName = (firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '')).toLowerCase()
+        const character = firstName.substring(0, 1).toUpperCase()
 
         const client = await MongoClient.connect(
             `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
@@ -47,6 +49,8 @@ async function handler(req, res) {
                 }
                 i++
             }
+
+
             const user = await db.collection('users').insertOne(
                 {
                     email: data.email,
@@ -54,6 +58,7 @@ async function handler(req, res) {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     userName: uniqueUsername,
+                    profilePic: data.profilePic ? data.profilePic : character,
                     address: {
                         province: data.address.province,
                         district: data.address.district,
@@ -66,7 +71,7 @@ async function handler(req, res) {
             res.status(200).json({ message: 'Register successful' });
             client.close()
         }
-        const userName = (data.firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '')).toLowerCase()
+
         const user = await db.collection('users').insertOne(
             {
                 email: data.email,
@@ -74,6 +79,7 @@ async function handler(req, res) {
                 firstName: data.firstName,
                 lastName: data.lastName,
                 userName: userName,
+                profilePic: data.profilePic ? data.profilePic : character,
                 address: {
                     province: data.address.province,
                     district: data.address.district,
@@ -83,14 +89,10 @@ async function handler(req, res) {
 
             }
         )
-       
+
         console.log(user)
 
 
-
-
-   
-        
         res.status(200).json({ message: 'Register successful' });
         //Close DB connection
         client.close();

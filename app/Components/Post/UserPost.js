@@ -41,6 +41,7 @@ function UserPost() {
     const address = session.user.name.split(',')[5] + ',' + session.user.name.split(',')[4]
     const profilePic = session.user.image
 
+
     const [text, setText] = useState(null)
     const [isLoading, setLoading] = useState(false)
     const [buttonPopup, setButtonPopup] = useState(false)
@@ -122,9 +123,9 @@ function UserPost() {
 
                 <Card sx={styles.post} className="drop-shadow-lg">
                     <Flex sx={{ width: '100%', top: 0, height: '3em', justifyContent: 'center', alignItems: 'center' }}>
-                        <Box >{!session.user.image ? <ProfilePicHolder height={44} width={44} character={fullName.substring(0, 1).toUpperCase()} />
+                        <Box >{profilePic.length == 1 ? <ProfilePicHolder height={44} width={44} character={profilePic} />
                             :
-                            <Image src={session.user.image} width={44} height={44} sx={{ borderRadius: '50%' }} />}</Box>
+                            <Image src={profilePic} width={44} height={44} sx={{ borderRadius: '50%' }} />}</Box>
                         <Input sx={{ borderRadius: '2em', width: '80%', marginLeft: '2em' }} placeholder='What are you thinking ?' onClick={() => setButtonPopup(true)}></Input>
 
                     </Flex>
@@ -191,7 +192,7 @@ function UserPost() {
                                 }}
                             >
                                 <Box sx={{ p: 1 }} >
-                                    <Box onClick={() => { alert('WORKING IN PROGRESS') }} sx={{ border: '4px solid green', borderStyle: 'dotted', borderRadius: '1em', height: '5em', width: '100%', opacity: '0.6', display: 'flex', justifyContent: 'center', alignItems: 'center', ':hover': { cursor: 'pointer' } }}>{bigImage} <Box sx={{ color: '#3B8C66', fontWeight: '600', ml: 2 }}>ADD IMAGE</Box> </Box>
+                                    <Box onClick={() => { alert('WORK IN PROGRESS') }} sx={{ border: '4px solid green', borderStyle: 'dotted', borderRadius: '1em', height: '5em', width: '100%', opacity: '0.6', display: 'flex', justifyContent: 'center', alignItems: 'center', ':hover': { cursor: 'pointer' } }}>{bigImage} <Box sx={{ color: '#3B8C66', fontWeight: '600', ml: 2 }}>ADD IMAGE</Box> </Box>
 
                                 </Box>
                             </animated.div>

@@ -22,8 +22,9 @@ function Post(props) {
         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
     </svg>
 
-
+    console.log(props.profilePic)
     const [showComments, setShowComments] = useState(false)
+    const isProfilePicExist = props.profilePic.length == 1
 
     const handleShowComments = async () => {
         setShowComments(!showComments)
@@ -35,7 +36,7 @@ function Post(props) {
             <Box sx={{ width: '100%', top: 0, display: 'flex' }}>
                 <Box sx={styles.userInfo}>
                     <div style={{ gridRow: '1/span 2', width: '46px', height: '46px' }}>
-                        <Image src={props.profilePic} width='46' height='46' style={{ borderRadius: '50%' }} /></div>
+                        {isProfilePicExist ? <ProfilePicHolder width={46} height={46} character={props.profilePic} /> : <Image src={props.profilePic} width='46' height='46' style={{ borderRadius: '50%' }} />}</div>
                     <Box sx={{ marginLeft: '1em' }}>
                         <Box sx={{ display: 'flex', width: '100%' }}>
                             <Box sx={styles.fullName}><Link href={'/user/' + props.userName}>{props.fullName}</Link></Box>
@@ -48,7 +49,7 @@ function Post(props) {
                 </Box>
                 <Box sx={{ float: 'right' }}>{more}</Box>
             </Box>
-           
+
 
             <Container sx={{ p: 1 }}>{props.text}</Container>
             {props.image ? <Box>
@@ -67,22 +68,22 @@ function Post(props) {
             <hr style={{ marginTop: '1.4em' }} />
             {showComments ?
                 <Box>
-                    {props.comments?props.comments.map(({fullName, text},userName)=>(
+                    {props.comments ? props.comments.map(({ fullName, text }, userName) => (
                         <Box sx={{ mt: '30px' }} key={userName}>
 
-                        <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'right' }}>
 
-                            <Box sx={{ mr: 2 }}>
-                                <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600,':hover':{cursor:'pointer',textDecoration:'underline'} }}>{fullName}</Box>
-                                <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#f8f8f8', p: 1, fontSize: '15px', borderRadius: '12px' }}>{text}</Box>
-                                <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>Date</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex',justifyContent:'center',alignItems:'center', ml:2}}>{more}</Box></Box>
-                                
+                                <Box sx={{ mr: 2 }}>
+                                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600, ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>{fullName}</Box>
+                                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#f8f8f8', p: 1, fontSize: '15px', borderRadius: '12px' }}>{text}</Box>
+                                    <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>Date</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 2 }}>{more}</Box></Box>
+
+                                </Box>
+                                <ProfilePicHolder width={44} height={44} character={'A'} />
                             </Box>
-                            <ProfilePicHolder width={44} height={44} character={'A'} />
                         </Box>
-                    </Box>
-                    )):null}
-                    
+                    )) : null}
+
                 </Box>
                 :
                 null
@@ -90,7 +91,7 @@ function Post(props) {
 
 
 
-            <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName}  />
+            <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName} />
         </Card>
     )
 }

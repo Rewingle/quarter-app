@@ -16,8 +16,8 @@ function SelectAddress(props) {
         getProvinces()
     }, [])
     const getProvinces = async () => {
-        
-        const res= await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) }).catch(err => alert(err))
+
+        const res = await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'provinces' }) }).catch(err => alert(err))
         const data = await res.json()
         console.log(data)
         setProvinces(data)
@@ -35,7 +35,8 @@ function SelectAddress(props) {
     }
 
     const handleProvince = async (e) => {
-        setSelectedProvince(e.target.value)
+
+        setSelectedProvince(e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1).toLowerCase()) //SET WHICH ONLY THE INITIALS ARE CAPITAL LETTER
         setNeighborhoods()
         setDistricts()
         const res = await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'districts', province: e.target.value }) })
@@ -43,14 +44,14 @@ function SelectAddress(props) {
         setDistricts(data)
     }
     const handleDistrict = async (e) => {
-        setSelectedDistrict(e.target.options[e.target.selectedIndex].text)
+        setSelectedDistrict(e.target.options[e.target.selectedIndex].text.charAt(0).toUpperCase() + e.target.options[e.target.selectedIndex].text.slice(1).toLowerCase())
         setNeighborhoods()
         const res = await fetch('/api/addressdata', { method: 'POST', body: JSON.stringify({ selected: 'neighborhoods', districtId: parseInt(e.target.value, 10) }) })
         const data = await res.json()
         setNeighborhoods(data)
     }
     const handleNeighborhood = (e) => {
-        setSelectedNeighborhood(e.target.value)
+        setSelectedNeighborhood(e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1).toLowerCase())
     }
     const handleSubmit = () => {
         if (selectedDistrict && selectedNeighborhood) {
@@ -108,7 +109,7 @@ function SelectAddress(props) {
                     }
                         defaultValue="Province">
                         {provinces ? <option value=''>SELECT PROVINCE</option> : null}
-                        {provinces?.map(province => <option>{province.SehirAdi}</option>)}
+                        {provinces?.map(province => <option >{province.SehirAdi}</option>)}
 
                     </Select>
                 </Box>
@@ -166,7 +167,7 @@ function SelectAddress(props) {
                     <Button sx={styles.button} className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handleSubmit()}>Continue</Button>
 
                 </Box>
-            </Box> : <EnterUserInfo address={{province: selectedProvince, district: selectedDistrict, neighborhood: selectedNeighborhood }} tempUser={props.tempUser} />}
+            </Box> : <EnterUserInfo address={{ province: selectedProvince, district: selectedDistrict, neighborhood: selectedNeighborhood }} tempUser={props.tempUser} />}
         </Box>
     )
 }

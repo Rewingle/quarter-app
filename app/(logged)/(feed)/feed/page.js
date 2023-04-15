@@ -9,7 +9,7 @@ export default async function Page() {
 
 
     let posts = await getFeed();
-
+   
 
     return (
         <ul style={{ width: '42em' }}>
