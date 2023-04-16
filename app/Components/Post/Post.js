@@ -68,7 +68,7 @@ function Post(props) {
             <hr style={{ marginTop: '1.4em' }} />
             {showComments ?
                 <Box>
-                    {props.comments ? props.comments.map(({ fullName, text }, userName) => (
+                    {props.comments ? props.comments.map(({ fullName, text, profilePic }, userName) => (
                         <Box sx={{ mt: '30px' }} key={userName}>
 
                             <Box sx={{ display: 'flex', justifyContent: 'right' }}>
@@ -79,7 +79,7 @@ function Post(props) {
                                     <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>Date</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 2 }}>{more}</Box></Box>
 
                                 </Box>
-                                <ProfilePicHolder width={44} height={44} character={'A'} />
+                                {profilePic.length == 1?<ProfilePicHolder width={44} height={44} character={profilePic} />:<ProfilePicHolder src={profilePic} width={44} height={44} />}
                             </Box>
                         </Box>
                     )) : null}

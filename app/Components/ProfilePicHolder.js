@@ -6,7 +6,7 @@ function ProfilePicHolder(props) {
     
   /* 
     REQUIRED PROPS
-    WIDTH, HEIGHT, SRC?, CHARACTER
+    WIDTH, HEIGHT, SRC OR CHARACTER
   */
   return (
     <div>

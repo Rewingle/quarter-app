@@ -30,7 +30,7 @@ function Comment(props) {
                     postId: postId,
                     userName: userName,
                     fullName: fullName,
-                    photo: null,
+                    profilePic: session.user.image,
                     comment: currentComment
                 })
             })
