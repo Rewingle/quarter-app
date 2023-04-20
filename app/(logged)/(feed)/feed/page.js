@@ -3,7 +3,6 @@ import React from "react";
 import Post from "../../../Components/Post/Post.js";
 import { getFeed } from '../../../../lib/getFeed.js';
 import UserPost from "../../../Components/Post/UserPost.js";
-import { Button } from "theme-ui";
 import TopFeedBar from "../../../Components/TopFeedBar.js";
 
 export default async function Page() {

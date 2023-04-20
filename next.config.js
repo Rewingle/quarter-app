@@ -12,7 +12,8 @@ const nextConfig = {
   images:{
     domains: ['storage.googleapis.com',
               'https://quarter-app.vercel.app',
-              'quarter-app.s3.eu-central-1.amazonaws.com']
+              'quarter-app.s3.eu-central-1.amazonaws.com',
+              'quarter-app.s3.amazonaws.com']
   }
 }
 

@@ -120,7 +120,7 @@ export default function Header() {
                                         </div>
                                         {session.user.image.length == 1 ? <ProfilePicHolder height={44} width={44} character={session.user.image} />
                                             :
-                                            <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
+                                            <Image src={session.user.image} width={46} height={46} className='aspect-square rounded-full' />}
                                     </Container>
 
                                 </Box>
@@ -142,7 +142,7 @@ export default function Header() {
 
                         {session.user.image.length == 1? <ProfilePicHolder height={44} width={44} character={session.user.image} />
                             :
-                            <Image src='https://quarter-app.s3.eu-central-1.amazonaws.com/dummyperson.jpg' width={44} height={44} sx={{ borderRadius: '50%' }} />}
+                            <Image src={session.user.image} width={46} height={46} className='aspect-square rounded-full' />}
                         <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>{fullname}</Box>
                     </Box>
                     <br />

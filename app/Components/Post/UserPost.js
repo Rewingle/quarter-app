@@ -123,9 +123,9 @@ function UserPost() {
 
                 <Card sx={styles.post} className="drop-shadow-lg">
                     <Flex sx={{ width: '100%', top: 0, height: '3em', justifyContent: 'center', alignItems: 'center' }}>
-                        <Box >{profilePic.length == 1 ? <ProfilePicHolder height={44} width={44} character={profilePic} />
+                        <Box >{profilePic.length == 1 ? <ProfilePicHolder height={46} width={46} character={profilePic} />
                             :
-                            <Image src={profilePic} width={44} height={44} sx={{ borderRadius: '50%' }} />}</Box>
+                            <Image src={profilePic} width={48} height={48} className='aspect-square rounded-full'/>}</Box>
                         <Input sx={{ borderRadius: '2em', width: '80%', marginLeft: '2em' }} placeholder='What are you thinking ?' onClick={() => setButtonPopup(true)}></Input>
 
                     </Flex>

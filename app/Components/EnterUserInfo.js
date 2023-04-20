@@ -3,6 +3,8 @@ import DotLoader from 'react-spinners/DotLoader'
 import { Input, Box, Button } from 'theme-ui'
 import { useForm } from 'react-hook-form'
 import { hash } from 'bcryptjs'
+import AWSS3UploadAsh from 'aws-s3-upload-ash'
+
 
 function EnterUserInfo(props) {
   const camera = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-blue-50">
@@ -19,8 +21,8 @@ function EnterUserInfo(props) {
     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
   const close = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-50 cursor-pointer">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-</svg>
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
 
 
   const [word, setWord] = useState(null)
@@ -30,6 +32,12 @@ function EnterUserInfo(props) {
   const [loading, setLoading] = useState(false)
   const [isRegister, setRegister] = useState(false)
   const [isImageUploaded, setImageUploaded] = useState(false)
+  const [uploadedPhotoLocation, setUploadPhotoLocation] = useState(null)
+
+  const [file, setFile] = useState(null)
+  const [fileDataURL, setFileDataURL] = useState(null);
+
+  const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
   const {
     register,
@@ -42,37 +50,79 @@ function EnterUserInfo(props) {
   } */
   const onSubmit = async (data) => {
     const character = firstName.substring(0, 1).toUpperCase()
-    setLoading(true);
-    await fetch('/api/registerUser', {
-      method: 'POST', body: JSON.stringify({
-        email: props.tempUser.email,
-        password: await hash(props.tempUser.password, 10),
-        firstName: firstName,
-        lastName: lastName,
-        profilePic: isImageUploaded ? isImageUploaded : character,
-        address: {
-          province: props.address.province,
-          district: props.address.district,
-          neighborhood: props.address.neighborhood
-        }
+    if (file.type && file.name) {
+      setLoading(true);
+     
+      const config = {
+        bucketName: 'quarter-app',
+        dirName: 'profilePics',
+        region: 'eu-central-1',
+        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+        s3Url: 'https://quarter-app.s3.amazonaws.com/'
+      }
+      const S3CustomClient = new AWSS3UploadAsh(config);
+      const upload = await S3CustomClient.uploadFile(file, file.type, undefined, file.name, "public-read")
+        /* .then(res=> res.json())
+        .catch((err) => alert(err)) */
 
+      console.log(uploadedPhotoLocation)
+      console.log(upload)
+      const register = await fetch('/api/registerUser', {
+        method: 'POST', body: JSON.stringify({
+          email: props.tempUser.email,
+          password: await hash(props.tempUser.password, 10),
+          firstName: firstName,
+          lastName: lastName,
+          profilePic: upload.location? upload.location :  character,
+          address: {
+            province: props.address.province,
+            district: props.address.district,
+            neighborhood: props.address.neighborhood
+          }
+
+        })
+      }).then(res => {
+        setLoading(false);
+        //signIn()
+        setRegister(true)
+
+      }).catch(error => {
+        alert(error);
+        setLoading(false)
       })
-    }).then(res => {
-      setLoading(false);
-      //signIn()
-      setRegister(true)
+    }
+    else {
+      setLoading(true);
+      
+      await fetch('/api/registerUser', {
+        method: 'POST', body: JSON.stringify({
+          email: props.tempUser.email,
+          password: await hash(props.tempUser.password, 10),
+          firstName: firstName,
+          lastName: lastName,
+          profilePic: character,
+          address: {
+            province: props.address.province,
+            district: props.address.district,
+            neighborhood: props.address.neighborhood
+          }
 
-    }).catch(error => {
-      alert(error);
-      setLoading(false)
-    })
+        })
+      }).then(res => {
+        setLoading(false);
+        setRegister(true)
+
+      }).catch(error => {
+        alert(error);
+        setLoading(false)
+      })
+    }
+
 
 
   }
-  const [file, setFile] = useState(null);
-  const [fileDataURL, setFileDataURL] = useState(null);
 
-  const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
   const changeHandler = (e) => {
     const file = e.target.files[0];
@@ -116,7 +166,7 @@ function EnterUserInfo(props) {
               <p className="img-preview-wrapper">
                 {
                   <Box>
-                    <Box style={{position:'absolute',width:'22px',display:'flex',justifyContent:'center',alignItems:'center', height:'22px',zIndex:10,backgroundColor:'gray',borderRadius:'50%'}} onClick={()=>setFileDataURL(null)}>{close}</Box>
+                    <Box style={{ position: 'absolute', width: '22px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '22px', zIndex: 10, backgroundColor: 'gray', borderRadius: '50%' }} onClick={() => setFileDataURL(null)}>{close}</Box>
                     <img src={fileDataURL} alt="preview" style={{ width: '88px', height: '88px', borderRadius: '50%', display: 'flex', position: 'absolute', zIndex: 1, ':hover': { cursor: 'pointer' } }} />
                   </Box>
                 }
