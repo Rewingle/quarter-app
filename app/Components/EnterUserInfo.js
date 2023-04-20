@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DotLoader from 'react-spinners/DotLoader'
 import { Input, Box, Button } from 'theme-ui'
 import { useForm } from 'react-hook-form'
@@ -15,6 +15,13 @@ function EnterUserInfo(props) {
   const danger = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-red-500">
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
   </svg>
+  const check = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-green-500">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+  const close = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-50 cursor-pointer">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
 
   const [word, setWord] = useState(null)
 
@@ -22,7 +29,7 @@ function EnterUserInfo(props) {
   const [lastName, setLastName] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isRegister, setRegister] = useState(false)
-  const [isImageUploaded,setImageUploaded] = useState(false)
+  const [isImageUploaded, setImageUploaded] = useState(false)
 
   const {
     register,
@@ -42,7 +49,7 @@ function EnterUserInfo(props) {
         password: await hash(props.tempUser.password, 10),
         firstName: firstName,
         lastName: lastName,
-        profilePic: isImageUploaded? isImageUploaded : character,
+        profilePic: isImageUploaded ? isImageUploaded : character,
         address: {
           province: props.address.province,
           district: props.address.district,
@@ -62,6 +69,40 @@ function EnterUserInfo(props) {
 
 
   }
+  const [file, setFile] = useState(null);
+  const [fileDataURL, setFileDataURL] = useState(null);
+
+  const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
+  const changeHandler = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.match(imageMimeType)) {
+      alert("Image mime type is not valid");
+      return;
+    }
+    setFile(file);
+  }
+  useEffect(() => {
+    let fileReader, isCancel = false;
+    if (file) {
+      fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        const { result } = e.target;
+        if (result && !isCancel) {
+          setFileDataURL(result)
+        }
+      }
+      fileReader.readAsDataURL(file);
+    }
+    return () => {
+      isCancel = true;
+      if (fileReader && fileReader.readyState === 1) {
+        fileReader.abort();
+      }
+    }
+
+  }, [file]);
+
 
   return (
     <Box>
@@ -69,15 +110,29 @@ function EnterUserInfo(props) {
         <Box sx={{ fontWeight: '700', fontStyle: 'italic', fontSize: '22px' }}>LET'S GET TO KNOW YOU</Box>
         <br />
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Box sx={{ position: 'relative', '&:hover': { cursor: 'pointer' } }} onClick={() => alert("WORK IN PROGRESS")}>
+          <Box sx={{ position: 'relative' }}>
             <Box sx={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'gray', position: 'absolute', bottom: 0, right: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{camera}</Box>
-            <Box sx={{ width: '88px', height: '88px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="bg-gradient-to-r from-teal-400 to-cyan-500">
-              <Box sx={{ fontWeight: '700', color: 'white', fontSize: '42px' }}>{word ? word : user}</Box>
-            </Box>
+            {fileDataURL ?
+              <p className="img-preview-wrapper">
+                {
+                  <Box>
+                    <Box style={{position:'absolute',width:'22px',display:'flex',justifyContent:'center',alignItems:'center', height:'22px',zIndex:10,backgroundColor:'gray',borderRadius:'50%'}} onClick={()=>setFileDataURL(null)}>{close}</Box>
+                    <img src={fileDataURL} alt="preview" style={{ width: '88px', height: '88px', borderRadius: '50%', display: 'flex', position: 'absolute', zIndex: 1, ':hover': { cursor: 'pointer' } }} />
+                  </Box>
+                }
+              </p> : <Box sx={{ width: '88px', height: '88px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute', zIndex: 1, ':hover': { cursor: 'pointer' } }} className="bg-gradient-to-r from-teal-400 to-cyan-500">
+                {<Box sx={{ fontWeight: '700', color: 'white', fontSize: '42px' }}>{word ? word : user}</Box>}
+              </Box>}
+
+            <Input sx={{ width: '88px', height: '88px', borderRadius: '50%', backgroundColor: 'red', opacity: 0, zIndex: 2, position: 'relative', ':hover': { cursor: 'pointer' } }}
+              type="file"
+              id='image'
+              accept='.png, .jpg, .jpeg'
+              onChange={changeHandler}
+            />
 
           </Box>
         </Box>
-        <Box sx={{ textAlign: 'center', fontWeight: '600' }}>UPLOAD PROFILE PICTURE</Box>
 
         <br />
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,9 +158,10 @@ function EnterUserInfo(props) {
           {errors?.lastName?.type === "required" && (
             <p style={{ fontSize: '14px', color: 'red' }}><div style={{ display: 'flex' }}><div style={{ display: 'flex' }}>{danger} Last Name is required</div></div></p>
           )}
+          <br />
           <Button sx={{ float: 'right' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={() => handleSubmit()}>Continue</Button>
         </form>
-      </Box>:<Box sx={{fontStyle:'italic',fontWeight:'600', textAlign:'center'}}>SUCCESSFULLY REGISTERED</Box> : <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}><DotLoader color='#14B8A6' size={30} /></Box>
+      </Box> : <Box sx={{ mt: 4 }}><Box sx={{ fontStyle: 'italic', fontWeight: '600', textAlign: 'center', fontSize: '20px' }}><Box sx={{ display: 'flex', justifyContent: 'center' }}>{check}</Box><Box sx={{ mt: 3 }}>SUCCESSFULLY REGISTERED</Box><Box sx={{ fontSize: '16px', fontWeight: '500', fontStyle: 'normal' }}>Please log in</Box></Box></Box> : <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}><DotLoader color='#14B8A6' size={30} /></Box>
       }
     </Box>
   )

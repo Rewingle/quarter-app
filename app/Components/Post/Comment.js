@@ -15,9 +15,9 @@ function Comment(props) {
     </svg>
 
     const { data: session } = useSession()
-    const fullName = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
+    const fullName = session.user.name.split(',')[1] + ' ' + session.user.name.split(',')[2]
     const character = fullName.substring().substring(0, 1).toUpperCase()
-    const userName = session.user.name.split(',')[2]
+    const userName = session.user.name.split(',')[3]
 
     const [comment, setComment] = useState(null)
     const [isLoading, setLoading] = useState(false)

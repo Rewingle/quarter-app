@@ -43,7 +43,7 @@ function Post(props) {
                             <Box sx={{ float: 'right' }}></Box>
                         </Box>
 
-                        <Box sx={{ fontSize: '16px', fontWeight: 'lighter', display: 'flex', opacity: 0.7 }}><span>{locationIcon}</span><span>{props.location} , {props.date}</span></Box>
+                        <Box sx={{ fontSize: '16px', fontWeight: 'lighter', display: 'flex', opacity: 0.7 }}><span>{locationIcon}</span><span>{props.location} , {props.date}</span> <span style={{float:'right'}}></span></Box>
                     </Box>
 
                 </Box>
@@ -57,7 +57,9 @@ function Post(props) {
             </Box> : null}
 
             <Box sx={{ mt: 1 }}>
+      
                 <Box sx={{ display: 'flex', marginBottom: '1em', float: 'right' }}>
+                    
                     <Box sx={{ display: 'flex', p: 1, borderRadius: '16px', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span>{like}</span> <span style={{ marginLeft: '0.4em' }}>{props.likes}</span></Box>
 
                     <Box onClick={() => { handleShowComments() }} sx={{ display: 'flex', p: 1, borderRadius: '16px', alignItems: 'center', justifyContent: 'center', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span style={{ marginLeft: '1em' }}>{comment}</span><span style={{ marginLeft: '0.4em' }}>{props.comments ? props.comments.length : null}</span><span style={{ marginLeft: '0.2em' }}>Comments</span></Box>

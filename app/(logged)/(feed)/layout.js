@@ -47,8 +47,8 @@ export default function LoggedLayout({ children }) {
 
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
     }
-    const neighborhood = session.user.name.split(',')[5]
-    const district = session.user.name.split(',')[4]
+    const neighborhood = session.user.name.split(',')[6]
+    const district = session.user.name.split(',')[5]
 
     return (
         <React.Fragment>
@@ -56,7 +56,7 @@ export default function LoggedLayout({ children }) {
             <Box as="section" id="feed" sx={styles.grid}>
                 <Box sx={styles.leftBar}>
                     <Box sx={{ position: 'fixed' }}>
-                        <Box sx={{ float: 'right', position: 'absolute', display: 'flex' }}><span style={{ float: 'left' }}>{locationIcon}</span><span>{neighborhood + ' ' + district}</span></Box>
+                        <Box sx={{ float: 'right', position: 'absolute', display: 'flex' }}><span style={{ float: 'left' }}>{locationIcon}</span><span>{neighborhood.toUpperCase() + ' ' + district.toUpperCase()}</span></Box>
                         <Box sx={{ marginTop: '6em' }}>
                             <ul style={styles.leftBarList}>
 

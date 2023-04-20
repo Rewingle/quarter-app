@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Box, Button, Container } from 'theme-ui';
 import Login from './Components/HomeRegister';
 import Footer from './Components/Footer';
-
+import Link from 'next/link';
 
 function Home() {
     const connection = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-teal-500">
@@ -95,7 +95,7 @@ function Home() {
                 </Box>
             </Box>
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', paddingBottom: '4em' }}>
-                <Button className='bg-gradient-to-r from-teal-400 to-cyan-500' sx={{ width: '8em', height: '3em', color: 'white', fontSize: '20px', fontWeight: '600' }}>SIGN UP</Button>
+                <Link href='/signup'><Button className='bg-gradient-to-r from-teal-400 to-cyan-500' sx={{ width: '8em', height: '3em', color: 'white', fontSize: '20px', fontWeight: '600' }}>SIGN UP</Button></Link>
             </Box>
 
             <Footer />

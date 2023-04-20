@@ -44,11 +44,11 @@ export default function Header() {
 
 
     const { data: session } = useSession()
-    const fullname = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
-    const userName = session.user.name.split(',')[2]
-    const province = session.user.name.split(',')[3]
-    const district = session.user.name.split(',')[4]
-    const neighborhood = session.user.name.split(',')[5]
+    const fullname = session.user.name.split(',')[1] + ' ' + session.user.name.split(',')[2]
+    const userName = session.user.name.split(',')[3]
+    const province = session.user.name.split(',')[4]
+    const district = session.user.name.split(',')[5]
+    const neighborhood = session.user.name.split(',')[6]
 
 
     const [mobileMenu, setMobileMenu] = useState(false);

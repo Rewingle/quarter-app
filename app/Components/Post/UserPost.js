@@ -36,9 +36,9 @@ function UserPost() {
 
     //SET USER INFO
     const { data: session } = useSession()
-    const fullName = session.user.name.split(',')[0] + ' ' + session.user.name.split(',')[1]
-    const userName = session.user.name.split(',')[2]
-    const address = session.user.name.split(',')[5] + ',' + session.user.name.split(',')[4]
+    const fullName = session.user.name.split(',')[1] + ' ' + session.user.name.split(',')[2]
+    const userName = session.user.name.split(',')[3]
+    const address = session.user.name.split(',')[6] + ' ' + session.user.name.split(',')[5]
     const profilePic = session.user.image
 
 
@@ -68,7 +68,7 @@ function UserPost() {
         { name: 'Childcare' },
         { name: 'Government' },
         { name: 'Nature' },
-        { name: 'Mechanic' },
+        { name: 'Greeting' },
         { name: 'Question' }
     ]
     const [clickedTag, setClickedTag] = useState([])

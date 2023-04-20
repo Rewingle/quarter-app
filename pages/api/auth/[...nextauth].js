@@ -52,7 +52,7 @@ export const authOptions = {
         console.log(user)
         //client.close();
         //NAME : FIRST NAME , LASTNAME , PROVINCE , DISTRICT , NEIGHBORHOOD 
-        return { name: user.firstName +','+ user.lastName +','+user.userName+','+user.address.province+','+user.address.district+','+user.address.neighborhood, email: user.email, image:user.profilePic }
+        return { name: user._id +','+ user.firstName +','+ user.lastName +','+user.userName+','+user.address.province+','+user.address.district+','+user.address.neighborhood, email: user.email, image:user.profilePic }
       },
     }),
   ],
