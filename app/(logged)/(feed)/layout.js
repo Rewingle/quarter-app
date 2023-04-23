@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 export default function LoggedLayout({ children }) {
 
@@ -42,7 +43,7 @@ export default function LoggedLayout({ children }) {
 
         },
     })
-
+    
     if (status === "loading") {
 
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
