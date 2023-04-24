@@ -4,6 +4,8 @@ import React from "react";
 import UserPost from "../../../Components/Post/UserPost.js";
 import TopFeedBar from "../../../Components/TopFeedBar.js";
 import Feed from "../../../Components/Feed.js";
+import { useStore } from '../../../../store/store.js'
+import { useEffect } from "react";
 
 export default function Page() {
 

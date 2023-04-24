@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import Post from './Post/Post'
 import { Card, Box } from 'theme-ui'
 import DotLoader from 'react-spinners/DotLoader'
+import { useStore } from '../../store/store'
 
 function Feed() {
     const more = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 opacity-40 ">
@@ -13,30 +14,33 @@ function Feed() {
     const [posts, setPosts] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    const { data: session,status } = useSession()
-    if (status === "loading") {
+    const {email} = useStore()
+
+    //const { data: session, status } = useSession()
+
+ /*    if (status === "loading") {
 
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
-    }
- /*    useEffect(() => {
-        const getPosts = async () => {
-            const userId = session.user.name.split(',')[0]
-            const neighborhood = session.user.name.split(',')[6]
-            const district = session.user.name.split(',')[5]
-
-            console.log(neighborhood + ',' + district)
-            console.log(userId)
-
-            await fetch('/api/getFeed', {
-                method: 'POST', body: JSON.stringify({
-                    location: neighborhood + ',' + district,
-                    userId: userId
-                })
-            }).then(res => res.json().then(data => { console.log(data); setPosts(data); setLoading(false) })).catch((err) => console.log(err))
-        }
-        getPosts()
-    }, [])
- */
+    } */
+    /*    useEffect(() => {
+           const getPosts = async () => {
+               const userId = session.user.name.split(',')[0]
+               const neighborhood = session.user.name.split(',')[6]
+               const district = session.user.name.split(',')[5]
+   
+               console.log(neighborhood + ',' + district)
+               console.log(userId)
+   
+               await fetch('/api/getFeed', {
+                   method: 'POST', body: JSON.stringify({
+                       location: neighborhood + ',' + district,
+                       userId: userId
+                   })
+               }).then(res => res.json().then(data => { console.log(data); setPosts(data); setLoading(false) })).catch((err) => console.log(err))
+           }
+           getPosts()
+       }, [])
+    */
     const SkeletonLoading = () => {
         const styles = {
             skeleton: {
@@ -76,7 +80,7 @@ function Feed() {
     return (
 
         <>
-          <div>asdsad</div>
+            <div>{email}</div>
 
         </>
 

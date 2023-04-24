@@ -4,9 +4,9 @@ import { Box, Container, Flex, Image, Input } from 'theme-ui';
 import Sticky from 'react-stickynode'
 import Link from 'next/link';
 import { signOut } from "next-auth/react"
-import { useSession } from "next-auth/react";
+//import { useSession } from "next-auth/react";
 import ProfilePicHolder from './ProfilePicHolder';
-
+import { useStore } from '../../store/store'
 
 export default function Header() {
     const homeIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 text-neutral-900">
@@ -43,12 +43,8 @@ export default function Header() {
     </svg>
 
 
-    const { data: session } = useSession()
-    const fullname = session.user.name.split(',')[1] + ' ' + session.user.name.split(',')[2]
-    const userName = session.user.name.split(',')[3]
-    const province = session.user.name.split(',')[4]
-    const district = session.user.name.split(',')[5]
-    const neighborhood = session.user.name.split(',')[6]
+    const {fullname, userName,profilePic, address} = useStore()
+
 
 
     const [mobileMenu, setMobileMenu] = useState(false);
@@ -118,9 +114,9 @@ export default function Header() {
                                         <div style={{ backgroundColor: 'dimgray', borderRadius: '50%', zIndex: 50, bottom: 0, right: 0, height: '14px', width: '14px', position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             {dropArrow}
                                         </div>
-                                        {session.user.image.length == 1 ? <ProfilePicHolder height={44} width={44} character={session.user.image} />
+                                        {profilePic.length == 1 ? <ProfilePicHolder height={44} width={44} character={profilePic} />
                                             :
-                                            <Image src={session.user.image} width={46} height={46} className='aspect-square rounded-full' />}
+                                            <Image src={profilePic} width={46} height={46} className='aspect-square rounded-full' />}
                                     </Container>
 
                                 </Box>
@@ -140,9 +136,9 @@ export default function Header() {
                 <Box sx={styles.menuItems}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
 
-                        {session.user.image.length == 1? <ProfilePicHolder height={44} width={44} character={session.user.image} />
+                        {profilePic.length == 1? <ProfilePicHolder height={44} width={44} character={profilePic} />
                             :
-                            <Image src={session.user.image} width={46} height={46} className='aspect-square rounded-full' />}
+                            <Image src={profilePic} width={46} height={46} className='aspect-square rounded-full' />}
                         <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>{fullname}</Box>
                     </Box>
                     <br />

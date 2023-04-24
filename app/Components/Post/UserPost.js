@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react'
 import ProfilePicHolder from '../ProfilePicHolder'
 import DotLoader from 'react-spinners/DotLoader'
 import { animated, useSpring } from '@react-spring/web'
+import { useStore } from '../../../store/store'
 
 function UserPost() {
     const image = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 opacity-60">
@@ -36,11 +37,13 @@ function UserPost() {
     
 
     //SET USER INFO
-    const { data: session } = useSession()
+    const {firstName,lastName,userName,address,profilePic} = useStore()
+
+/*     const { data: session } = useSession()
     const fullName = session.user.name.split(',')[1] + ' ' + session.user.name.split(',')[2]
     const userName = session.user.name.split(',')[3]
     const address = session.user.name.split(',')[6] + ' ' + session.user.name.split(',')[5]
-    const profilePic = session.user.image
+    const profilePic = session.user.image */
 
 
     const [text, setText] = useState(null)
@@ -48,7 +51,6 @@ function UserPost() {
     const [buttonPopup, setButtonPopup] = useState(false)
     const [isTagSelected, setTagSelected] = useState(false)
     const [isAddPhotoSelected, setAddPhotoSelected] = useState(false)
-    const [tagColor, setTagColor] = useState("black")
 
     //REACT SPRING
     const tagSlide = useSpring({
@@ -89,13 +91,13 @@ function UserPost() {
                 method: 'POST', body: JSON.stringify({
                     date: date,
                     likes: 0,
-                    location: address,
+                    location: address.neighborhood+' '+address.district,
                     profilePic: profilePic,
                     text: text,
                     tags: selectedTags,
                     comments: [],
                     userName: userName,
-                    fullName: fullName
+                    fullName: firstName+ ' '+lastName
                 })
             })
             setLoading(false)
