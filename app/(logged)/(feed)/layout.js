@@ -1,14 +1,16 @@
 'use client'
 import Header from '../../Components/Header'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Container } from 'theme-ui'
 import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useStore } from '../../../store/store'
+
 
 export default function LoggedLayout({ children }) {
+
 
     const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -35,76 +37,100 @@ export default function LoggedLayout({ children }) {
         <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
     </svg>
 
+    console.log('timeout called')
 
-    const { data: session, status } = useSession({
+    const { address, setId, setEmail, setFirstName, setLastName, setUserName, setProfilePic, setAddress } = useStore()
+    const [loading, setLoading] = useState(true)
+    /* const { data: session, status } = useSession({
         required: true,
         onUnauthenticated() {
             redirect('/auth/login')
 
         },
-    })
-    
-    if (status === "loading") {
 
-        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
-    }
-    const neighborhood = session.user.name.split(',')[6]
-    const district = session.user.name.split(',')[5]
+    }) */
+    const status = true
+    useEffect(() => {
+
+        //console.log(session)
+        setId('session.user.name.split(', ')[0]')
+        setEmail('session.user.email');
+        setFirstName('session.user.name.split(', ')[1]');
+        setLastName('session.user.name.split(', ')[2]');
+        setUserName('session.user.name.split(', ')[3]');
+        setProfilePic('M');
+        setAddress({
+            province: "session.user.name.split(',')[4]",
+            district: "session.user.name.split(',')[5]",
+            neighborhood: "session.user.name.split(',')[6]"
+        })
+        setLoading(false)
+
+
+    }, [])
+    /*     
+       */
+
+
+    /*    
+*/
+
+
 
     return (
         <React.Fragment>
-            <Header />
-            <Box as="section" id="feed" sx={styles.grid}>
-                <Box sx={styles.leftBar}>
-                    <Box sx={{ position: 'fixed' }}>
-                        <Box sx={{ float: 'right', position: 'absolute', display: 'flex' }}><span style={{ float: 'left' }}>{locationIcon}</span><span>{neighborhood.toUpperCase() + ' ' + district.toUpperCase()}</span></Box>
-                        <Box sx={{ marginTop: '6em' }}>
-                            <ul style={styles.leftBarList}>
+            {status === 'authenticated' || !loading ? <React.Fragment><Header />
+                <Box as="section" id="feed" sx={styles.grid}>
+                    <Box sx={styles.leftBar}>
+                        <Box sx={{ position: 'fixed' }}>
+                            <Box sx={{ float: 'right', position: 'absolute', display: 'flex' }}><span style={{ float: 'left' }}>{locationIcon}</span><span>{address.neighborhood.toUpperCase() + ' ' + address.district.toUpperCase()}</span></Box>
+                            <Box sx={{ marginTop: '6em' }}>
+                                <ul style={styles.leftBarList}>
 
-                                <Box><Link href=""><li><div >{homeIcon}</div><span></span><div>Home</div></li></Link></Box>
-                                <Box><Link href=""><li><div >{bell}</div><span></span><div>Notifications</div></li></Link></Box>
-                                <Box><Link href=""><li><div >{message}</div><span></span><div>Messages</div></li></Link></Box>
-                                <Box><Link href=""><li><div >{store}</div><span></span><div>Business</div></li></Link></Box>
-                            </ul>
+                                    <Box><Link href=""><li><div >{homeIcon}</div><span></span><div>Home</div></li></Link></Box>
+                                    <Box><Link href=""><li><div >{bell}</div><span></span><div>Notifications</div></li></Link></Box>
+                                    <Box><Link href=""><li><div >{message}</div><span></span><div>Messages</div></li></Link></Box>
+                                    <Box><Link href=""><li><div >{store}</div><span></span><div>Business</div></li></Link></Box>
+                                </ul>
+                            </Box>
+                        </Box>
+
+                    </Box>
+                    <Box sx={styles.feedBar}>
+                        <Box sx={styles.feedBarContainer}>
+                            <Container sx={{ justifyContent: 'center', display: 'flex' }}>
+                                {children}
+                            </Container>
                         </Box>
                     </Box>
 
-                </Box>
-                <Box sx={styles.feedBar}>
-                    <Box sx={styles.feedBarContainer}>
-                        <Container sx={{ justifyContent: 'center', display: 'flex' }}>
-                            {children}
-                        </Container>
-                    </Box>
-                </Box>
 
+                    <Box sx={styles.rightBar}>
+                        <Box sx={styles.rightBarContainer}>
+                            <Container sx={styles.rightBarInner}>
+                                <ul>
+                                    <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'red', borderRadius: '8px' }}></Box></li>
+                                    <br />
+                                    <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'purple', borderRadius: '8px' }}></Box></li>
+                                    <li>-NEARBY PEOPLE</li>
+                                </ul>
 
-                <Box sx={styles.rightBar}>
-                    <Box sx={styles.rightBarContainer}>
-                        <Container sx={styles.rightBarInner}>
-                            <ul>
-                                <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'red', borderRadius: '8px' }}></Box></li>
-                                <br />
-                                <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'purple', borderRadius: '8px' }}></Box></li>
-                                <li>-NEARBY PEOPLE</li>
-                            </ul>
-
-                        </Container>
-                    </Box>
-
-                </Box>
-            </Box>
-            <Box sx={styles.mobileFooter}>
-                <Box>
-                    <Box style={styles.content}>
-                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{homeIcon}</Box>Home</Box>
-                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{discover}</Box>Discover</Box>
-                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{store}</Box>Business</Box>
-                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{notifications}</Box>Notifications</Box>
+                            </Container>
+                        </Box>
 
                     </Box>
                 </Box>
-            </Box>
+                <Box sx={styles.mobileFooter}>
+                    <Box>
+                        <Box style={styles.content}>
+                            <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{homeIcon}</Box>Home</Box>
+                            <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{discover}</Box>Discover</Box>
+                            <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{store}</Box>Business</Box>
+                            <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{notifications}</Box>Notifications</Box>
+
+                        </Box>
+                    </Box>
+                </Box> </React.Fragment> : <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>}
         </React.Fragment>
     )
 
