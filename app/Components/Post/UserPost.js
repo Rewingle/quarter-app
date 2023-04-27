@@ -37,6 +37,7 @@ function UserPost() {
 
     //SET USER INFO
     const { data: session } = useSession()
+    const id = session.user.name.split(',')[0]
     const fullName = session.user.name.split(',')[1] + ' ' + session.user.name.split(',')[2]
     const userName = session.user.name.split(',')[3]
     const address = session.user.name.split(',')[6] + ' ' + session.user.name.split(',')[5]
@@ -87,6 +88,7 @@ function UserPost() {
             setLoading(true);
             await fetch('/api/addPost', {
                 method: 'POST', body: JSON.stringify({
+                    postedBy: id,
                     date: date,
                     likes: 0,
                     location: address,
@@ -207,14 +209,14 @@ function UserPost() {
 
                             <br />
 
-                            <Box sx={{ fontSize: '14px', color: '#06b6d4', fontWeight: '600' }}>Your location:</Box>
+      
                             <Box sx={{ display: 'flex', width: '100%' }}>
 
                                 <Box sx={{ display: 'flex', width: '80%', fontSize: '14px', alignItems: 'center' }}>{locationIcon}{address}</Box>
                                 <Box sx={{ width: '20%' }}><Button sx={{ fontWeight: '600', float: 'right', width: '6em' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={(e) => { handlePost(text) }}>POST</Button></Box>
                             </Box>
                         </form> : <DotLoader color='#14B8A6' size={32} />}
-                    <Box sx={{ width: '20%' }}><Button sx={{ fontWeight: '600', float: 'right', width: '6em' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={(e) => { console.log(selectedTags) }}>POST</Button></Box>
+                    
 
                 </Popup>
             </Flex>

@@ -1,30 +1,34 @@
-import { MongoClient } from 'mongodb';
+//import { MongoClient } from 'mongodb';
 import { ObjectId } from 'mongodb';
+import { connectToDatabase } from '../../lib/mongo';
 
 async function handler(req, res) {
 
     if (req.method === 'POST') {
         const data = JSON.parse(req.body)
         if (data) {
-            const client = await MongoClient.connect(
+           /*   const client = await MongoClient.connect(
                 `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
                 { useNewUrlParser: true, useUnifiedTopology: true }
-            );
-            const db = client.db();
-
+            ); 
+            const db = client.db() */
+            const {db} = connectToDatabase();
+            console.log(data)
             if (data.postId && data.comment) {
-
-
+                
                 const postId = new ObjectId(data.postId.toString())
-                const comment = await db.collection('posts').updateOne({ _id: postId }, {
+                const userId = new ObjectId(data.userId.toString())
+                console.log(data.date)
+                const comment = await db.collection("posts").updateOne({ _id: postId }, {
                     $push: {
                         "comments": {
+                            userId: userId,
                             userName: data.userName,
                             fullName: data.fullName,
                             text: data.comment,
+                            date: data.date,
                             photo: null,
                             likes: 0,
-                            date: null
                         }
                     }
                 })

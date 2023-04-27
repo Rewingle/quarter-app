@@ -4,6 +4,7 @@ import { Box, Textarea } from 'theme-ui'
 import ProfilePicHolder from '../ProfilePicHolder'
 import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
+import Image from 'next/image'
 
 function Comment(props) {
 
@@ -15,28 +16,39 @@ function Comment(props) {
     </svg>
 
     const { data: session } = useSession()
+    const userId = session.user.name.split(',')[0]
     const fullName = session.user.name.split(',')[1] + ' ' + session.user.name.split(',')[2]
-    const character = fullName.substring().substring(0, 1).toUpperCase()
+    
     const userName = session.user.name.split(',')[3]
+    const profilePic = session.user.image
 
     const [comment, setComment] = useState(null)
     const [isLoading, setLoading] = useState(false)
 
     const handleComment = async (postId, currentComment, fullName, userName) => {
         if (currentComment != '') {
+          
             setLoading(true);
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
+                "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+            const current = new Date();
+            const date = `${current.getDate()} ${monthNames[current.getMonth()]}`;
+            console.log(date)
             await fetch('/api/postComment', {
                 method: 'POST', body: JSON.stringify({
+                    userId: userId,
                     postId: postId,
                     userName: userName,
                     fullName: fullName,
-                    profilePic: session.user.image,
+                    date: date,
+                    profilePic: profilePic,
                     comment: currentComment
                 })
             })
+            setComment('')
             setLoading(false)
         }
-        else{
+        else {
             alert('asd')
         }
 
@@ -45,11 +57,13 @@ function Comment(props) {
     return (
         <React.Fragment>
             <Box sx={{ display: 'flex', height: '66px', width: '100%', alignItems: 'center' }}>
-                <Box ><ProfilePicHolder width={42} height={42} character={character} /></Box>
+                <Box >{profilePic.length == 1 ? <ProfilePicHolder height={46} width={46} character={profilePic} />
+                :
+                <Image src={profilePic} width={48} height={48} className='aspect-square rounded-full'/>}</Box>
                 <Box sx={{ width: '80%' }}>
                     <Box sx={{ position: 'relative' }}>
                         <Box style={styles.inputContainer}>
-                            <Textarea sx={styles.input} rows={1} wrap='soft' onChange={(e) => { setComment(e.target.value) }}
+                            <Textarea sx={styles.input} rows={1} wrap='soft' value={comment} onChange={(e) => { setComment(e.target.value) }}
                                 placeholder='Add a comment' autofillBackgroundColor="aquarmarine">
                             </Textarea>
                         </Box>

@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { useEffect } from 'react'
+
 
 export default function LoggedLayout({ children }) {
 
@@ -41,7 +41,8 @@ export default function LoggedLayout({ children }) {
         onUnauthenticated() {
             redirect('/auth/login')
 
-        },
+        }
+        
     })
     
     if (status === "loading") {
@@ -97,8 +98,8 @@ export default function LoggedLayout({ children }) {
             <Box sx={styles.mobileFooter}>
                 <Box>
                     <Box style={styles.content}>
-                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{homeIcon}</Box>Home</Box>
-                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{discover}</Box>Discover</Box>
+                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Link href={'/feed'}>{homeIcon}</Link></Box>Home</Box>
+                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Link  href={'/discover'}>{discover}</Link></Box>Discover</Box>
                         <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{store}</Box>Business</Box>
                         <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{notifications}</Box>Notifications</Box>
 

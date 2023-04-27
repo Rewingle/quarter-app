@@ -1,4 +1,6 @@
-import { MongoClient } from 'mongodb';
+//import { MongoClient } from 'mongodb';
+import { connectToDatabase } from '../../lib/mongo';
+
 export default async function handler(req, res) {
     if (req.method == 'POST') {
         const data = JSON.parse(req.body)
@@ -9,13 +11,9 @@ export default async function handler(req, res) {
         if (location && userId) {
             try {
                 console.log('debee')
-                const client = await MongoClient.connect(
-                    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
-                    { useNewUrlParser: true, useUnifiedTopology: true }
-                );
-                const db = client.db();
+                const { db } = await connectToDatabase();
 
-                const data = await db.collection("posts").find({}).limit(10).sort({ _id: -1 }).toArray();
+                const data = await db.collection("posts").find({location: location}).limit(10).sort({ _id: -1 }).toArray();
                 const posts = JSON.parse(JSON.stringify(data));
                 console.log(posts)
                 const filtered = posts.map(post => {
@@ -28,7 +26,7 @@ export default async function handler(req, res) {
                         date: post.date,
                         location: post.location,
                         profilePic: post.profilePic,
-                        comments: post.comments,
+                        commentsCount: post.comments.length,
                         text: post.text,
                         tags: post.tags,
                         likes: post.likes,
@@ -36,7 +34,7 @@ export default async function handler(req, res) {
                 });
                 
                 res.send(filtered)
-                client.close()
+                //client.close()
             }
             catch (e) {
                 

@@ -4,12 +4,17 @@ import { useSession } from 'next-auth/react'
 import Post from './Post/Post'
 import { Card, Box } from 'theme-ui'
 import DotLoader from 'react-spinners/DotLoader'
+import { keyframes } from '@emotion/react'
 
 function Feed() {
     console.log('GETTING POSTSS')
     const more = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 opacity-40 ">
         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
     </svg>
+    const unhappy = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+  </svg>
+  
     console.log('FEEDERO')
     const [posts, setPosts] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -21,7 +26,7 @@ function Feed() {
     }
     useEffect(() => {
         const getPosts = async () => {
-            
+
             const userId = session.user.name.split(',')[0]
             const neighborhood = session.user.name.split(',')[6]
             const district = session.user.name.split(',')[5]
@@ -31,7 +36,7 @@ function Feed() {
 
             await fetch('/api/getFeed', {
                 method: 'POST', body: JSON.stringify({
-                    location: neighborhood + ',' + district,
+                    location: neighborhood + ' ' + district,
                     userId: userId
                 })
             }).then(res => res.json().then(data => { console.log(data); setPosts(data); setLoading(false) })).catch((err) => console.log(err))
@@ -40,6 +45,7 @@ function Feed() {
     }, [])
 
     const SkeletonLoading = () => {
+        const fadeIn = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } })
         const styles = {
             skeleton: {
 
@@ -54,22 +60,23 @@ function Feed() {
         return (
 
             <Card sx={styles.skeleton} className="drop-shadow-lg">
-                <Box sx={{ width: '100%', top: 0, display: 'flex' }}>
-                    <Box sx={{ width: '100%', justifyContent: 'left', display: 'flex', gridTemplateColumns: 'auto auto', '&:div': { textAlign: 'center' } }}>
+                <Box sx={{ width: '100%', top: 0, display: 'flex', animation: `${fadeIn} 2s backwards infinite` }}>
+                    
+                <Box sx={{ width: '100%', justifyContent: 'left', display: 'flex', gridTemplateColumns: 'auto auto', '&:div': { textAlign: 'center' } }}>
                         <div style={{ gridRow: '1/span 2', width: '46px', height: '46px', backgroundColor: 'lightgray', borderRadius: '50%' }}></div>
                         <Box sx={{ marginLeft: '1em' }}>
                             <Box sx={{ display: 'flex', width: '100%' }}>
-                                <Box sx={{ width: '6em', borderRadius: '1em', backgroundColor: 'lightgray', height: '22px' }}></Box>
+                                <Box sx={{ width: '10em', borderRadius: '1em', backgroundColor: '#d2d2d2', height: '22px' }}></Box>
                                 <Box sx={{ float: 'right' }}></Box>
                             </Box>
 
-                            <Box sx={{ display: 'flex', height: '16px', width: '16em', backgroundColor: 'lightgray', borderRadius: '1em', mt: 1 }}></Box>
+                            <Box sx={{ display: 'flex', height: '16px', width: '16em', backgroundColor: '#e4e4e7', borderRadius: '1em', mt: 1 }}></Box>
                         </Box>
 
                     </Box>
                     <Box sx={{ float: 'right' }}>{more}</Box>
                 </Box>
-                <Box sx={{ backgroundColor: 'lightgray', width: '100%', height: '6em', borderRadius: '1em', mt: 1 }}>
+                <Box sx={{ backgroundColor: 'gainsboro', width: '100%', height: '6em', borderRadius: '1em', mt: 1,animation: `${fadeIn} 2s backwards infinite` }}>
                 </Box>
             </Card>
         )
@@ -78,13 +85,13 @@ function Feed() {
     return (
 
         <>
-            {!loading? posts ? posts.map(({ fullname, profilePic, text, image, location, date, likes }, index) => (
+            {!loading ? posts.length>0 ? posts.map(({ _id, fullName, profilePic, text, image, commentsCount, location, date, likes }, index) => (
                 <React.Fragment>
-                    <li style={{listStyle:'none'}} key={index}><Post fullname={fullname} profilePic={profilePic} text={text} image={image} location={location} date={date} likes={likes} /></li>
+                    <li style={{ listStyle: 'none' }} key={index}><Post postId={_id} fullName={fullName} profilePic={profilePic} text={text} commentsCount={commentsCount} image={image} location={location} date={date} likes={likes} /></li>
                     <br />
                 </React.Fragment>
-            )) : <div>WE CANT FIND POSTS</div>:<SkeletonLoading/>}
-
+            )) : <Box sx={{textAlign:'center',display:'flex',justifyContent:'center'}}><Box sx={{display:'flex',fontSize:'18px',mt:4}}>There are no posts in your neighborhood {unhappy} </Box></Box> : <SkeletonLoading />}
+            
         </>
 
 

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Comment from './Comment'
 import Link from 'next/link'
 import ProfilePicHolder from '../ProfilePicHolder'
-
+import { keyframes } from '@emotion/react'
 
 function Post(props) {
     const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
@@ -22,13 +22,60 @@ function Post(props) {
         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
     </svg>
 
+
+
     const [showComments, setShowComments] = useState(false)
+    const [commentsLoading, setCommentsLoading] = useState(false)
+    const [comments, setComments] = useState(null)
     const isProfilePicExist = props.profilePic.length == 1
 
     const handleShowComments = async () => {
-        setShowComments(!showComments)
-  
+        if (props.commentsCount == 0) {
+            return
+        }
+        // FETCH COMMENTS IF ITS YOUR FIRST TIME CLICKING "COMMENTS" BUTTON. OTHERWISE USE FIRST FETCHED COMMENTS, TO GET NEW COMMENTS YOU HAVE TO REFRESH
+        if (!showComments) {
+
+            if (!comments) {
+                setShowComments(!showComments)
+                setCommentsLoading(true)
+                await fetch('/api/getComments', {
+                    method: 'POST', body: JSON.stringify({
+                        postId: props.postId
+                    })
+                }).then(res => res.json().then(data => { console.log(data); setComments(data); setCommentsLoading(false) })).catch((err) => { console.log(err); setCommentsLoading(false) })
+
+            }
+            else {
+                setShowComments(!showComments)
+            }
+
+        }
+        else {
+            setShowComments(!showComments)
+        }
+
+
+
     }
+
+    const CommentsSkeleton = () => {
+        const fadeIn = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } })
+        return (
+            <Box sx={{display: 'flex', justifyContent: 'right', width: '100%',animation: `${fadeIn} 2s backwards infinite`}}>
+
+                <Box sx={{ mr: 2 }}>
+                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', height: '24px' }}><Box sx={{ backgroundColor: '#d4d4d4', width: '12em', borderRadius: '12px' }}></Box></Box>
+                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#e4e4e7', p: 1, borderRadius: '12px', width: '22em', height: '30.5px', mt: 1 }}></Box>
+
+                </Box>
+                <Box sx={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: '#d6d3d1' }}></Box>
+            </Box>
+        )
+
+
+    }
+
 
     return (
         <Card sx={styles.post} className="drop-shadow-lg">
@@ -42,7 +89,7 @@ function Post(props) {
                             <Box sx={{ float: 'right' }}></Box>
                         </Box>
 
-                        <Box sx={{ fontSize: '16px', fontWeight: 'lighter', display: 'flex', opacity: 0.7 }}><span>{locationIcon}</span><span>{props.location} , {props.date}</span> <span style={{float:'right'}}></span></Box>
+                        <Box sx={{ fontSize: '16px', fontWeight: 'lighter', display: 'flex', opacity: 0.7 }}><span>{locationIcon}</span><span>{props.location} , {props.date}</span> <span style={{ float: 'right' }}></span></Box>
                     </Box>
 
                 </Box>
@@ -56,42 +103,39 @@ function Post(props) {
             </Box> : null}
 
             <Box sx={{ mt: 1 }}>
-      
+
                 <Box sx={{ display: 'flex', marginBottom: '1em', float: 'right' }}>
-                    
+
                     <Box sx={{ display: 'flex', p: 1, borderRadius: '16px', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span>{like}</span> <span style={{ marginLeft: '0.4em' }}>{props.likes}</span></Box>
 
-                    <Box onClick={() => { handleShowComments() }} sx={{ display: 'flex', p: 1, borderRadius: '16px', alignItems: 'center', justifyContent: 'center', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span style={{ marginLeft: '1em' }}>{comment}</span><span style={{ marginLeft: '0.4em' }}>{props.comments ? props.comments.length : null}</span><span style={{ marginLeft: '0.2em' }}>Comments</span></Box>
+                    <Box onClick={() => { handleShowComments() }} sx={{ display: 'flex', p: 1, borderRadius: '16px', alignItems: 'center', justifyContent: 'center', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span style={{ marginLeft: '1em' }}>{comment}</span><span style={{ marginLeft: '0.4em' }}>{props.commentsCount > 0 ? props.commentsCount : null}</span><span style={{ marginLeft: '0.2em' }}>Comments</span></Box>
 
                 </Box>
 
             </Box>
             <hr style={{ marginTop: '1.4em' }} />
-            {showComments ?
+            {showComments ? !commentsLoading ?
                 <Box>
-                    {props.comments ? props.comments.map(({ fullName, text, profilePic }, userName) => (
-                        <Box sx={{ mt: '30px' }} key={userName}>
+                    {comments ? comments.map(({ fullName, text, profilePic, date, userName }, index) => (
+                        <Box sx={{ mt: '30px' }} key={index}>
 
                             <Box sx={{ display: 'flex', justifyContent: 'right' }}>
 
                                 <Box sx={{ mr: 2 }}>
-                                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600, ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>{fullName}</Box>
+                                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600, ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}><Link href={'/user/' + userName}>{fullName}</Link></Box>
                                     <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#f8f8f8', p: 1, fontSize: '15px', borderRadius: '12px' }}>{text}</Box>
-                                    <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>Date</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 2 }}>{more}</Box></Box>
+                                    <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>{date}</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 2 }}>{more}</Box></Box>
 
                                 </Box>
-                                {profilePic.length == 1?<ProfilePicHolder width={44} height={44} character={profilePic} />:<ProfilePicHolder src={profilePic} width={44} height={44} />}
+                                {profilePic.length == 1 ? <ProfilePicHolder width={44} height={44} character={profilePic} /> : <ProfilePicHolder src={profilePic} width={44} height={44} />}
                             </Box>
                         </Box>
                     )) : null}
-
                 </Box>
-                :
-                null
+                : <CommentsSkeleton />
+                : null
             }
-
-
-
+          
             <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName} />
         </Card>
     )
