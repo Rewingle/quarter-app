@@ -1,17 +1,17 @@
-import { MongoClient } from 'mongodb';
-//import { connectToDatabase } from '../../lib/mongo';
+//import { MongoClient } from 'mongodb';
+import { connectToDatabase } from '../../lib/mongo';
 async function handler(req, res) {
 
     if (req.method === 'POST') {
         if (req.body) {
             const body = JSON.parse(req.body)
             //Connect with database
-            const client = await MongoClient.connect(
+           /*  const client = await MongoClient.connect(
                 `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
                 { useNewUrlParser: true, useUnifiedTopology: true }
             ); 
-            const db = client.db()
-            //const {db} = connectToDatabase();
+            const db = client.db() */
+            const {db} = await connectToDatabase();
 
 
             if (body.selected == 'provinces') {

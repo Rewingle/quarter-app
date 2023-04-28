@@ -1,5 +1,6 @@
-import { MongoClient } from 'mongodb';
+//import { MongoClient } from 'mongodb';
 import { hash } from 'bcryptjs';
+import { connectToDatabase } from '../../lib/mongo';
 async function handler(req, res) {
     //Only POST mothod is accepted
     if (req.method === 'POST') {
@@ -29,11 +30,13 @@ async function handler(req, res) {
         const userName = (firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '')).toLowerCase()
         const character = firstName.substring(0, 1).toUpperCase()
 
-        const client = await MongoClient.connect(
+       /*  const client = await MongoClient.connect(
             `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
             { useNewUrlParser: true, useUnifiedTopology: true }
         );
-        const db = client.db();
+        const db = client.db(); */
+
+        const {db} = await connectToDatabase();
 
         const isFullNameExist = await db.collection('users').findOne({ firstName: data.firstName, lastName: data.lastName })
 
@@ -69,7 +72,7 @@ async function handler(req, res) {
                 }
             )
             res.status(200).json({ message: 'Register successful' });
-            client.close()
+            //client.close()
         }
 
         const user = await db.collection('users').insertOne(
@@ -95,7 +98,7 @@ async function handler(req, res) {
 
         res.status(200).json({ message: 'Register successful' });
         //Close DB connection
-        client.close();
+        //client.close();
     } else {
         //Response for other than POST method
         res.status(500).json({ message: 'Route not valid' });

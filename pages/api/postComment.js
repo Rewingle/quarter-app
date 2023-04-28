@@ -12,7 +12,7 @@ async function handler(req, res) {
                 { useNewUrlParser: true, useUnifiedTopology: true }
             ); 
             const db = client.db() */
-            const {db} = connectToDatabase();
+            const {db} = await connectToDatabase();
             console.log(data)
             if (data.postId && data.comment) {
                 
