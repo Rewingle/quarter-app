@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+//import { MongoClient } from 'mongodb';
 import { connectToDatabase } from '../../../lib/mongo';
 async function handler(req, res) {
     //Only POST mothod is accepted
@@ -28,7 +28,7 @@ async function handler(req, res) {
             console.log(checkExisting)
             const userId = JSON.stringify(checkExisting._id).split("'")[0].split('"')[1]
             res.status(422).json({ message: 'User already exists',userId: userId});
-            client.close();
+            //client.close();
             return;
         }
         //Hash password
@@ -40,7 +40,7 @@ async function handler(req, res) {
         console.log(checkExisting)
         res.status(200).json({ message: 'User is unique'});
         //Close DB connection
-        client.close(); 
+        //client.close(); 
     } else {
         //Response for other than POST method
         res.status(500).json({ message: 'Route not valid' });

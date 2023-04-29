@@ -50,9 +50,9 @@ function EnterUserInfo(props) {
   } */
   const onSubmit = async (data) => {
     const character = firstName.substring(0, 1).toUpperCase()
-    if (file.type && file.name) {
+    if (file) {
       setLoading(true);
-     
+      console.log('FİLEE BURADADADAADA')
       const config = {
         bucketName: 'quarter-app',
         dirName: 'profilePics',

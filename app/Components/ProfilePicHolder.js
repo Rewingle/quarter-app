@@ -10,7 +10,7 @@ function ProfilePicHolder(props) {
   */
   return (
     <div>
-      {props.src ? <Image src={props.src} width={props.width} height={props.height} sx={{ borderRadius: '50%' }} /> 
+      {props.src ? <Image src={props.src} width={props.width} height={props.height} style={{ borderRadius: '50%' }} /> 
       : 
       <Box sx={{ width: props.width, height: props.height, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="bg-gradient-to-r from-teal-400 to-cyan-500">
         <Box sx={{ fontWeight: '700', color: 'white', fontSize: '18px' }}>{props.character}</Box>
