@@ -24,10 +24,11 @@ function Feed() {
 
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
     }
+    const userId = session.user.name.split(',')[0]
     useEffect(() => {
         const getPosts = async () => {
 
-            const userId = session.user.name.split(',')[0]
+           
             const neighborhood = session.user.name.split(',')[6]
             const district = session.user.name.split(',')[5]
 
@@ -85,9 +86,9 @@ function Feed() {
     return (
 
         <>
-            {!loading ? posts.length>0 ? posts.map(({ _id, fullName, profilePic, text, image, commentsCount, location, date, likes }, index) => (
+            {!loading ? posts.length>0 ? posts.map(({ _id, fullName, profilePic, text, image, commentsCount, location, date, likes,isLiked }, index) => (
                 <React.Fragment>
-                    <li style={{ listStyle: 'none' }} key={index}><Post postId={_id} fullName={fullName} profilePic={profilePic} text={text} commentsCount={commentsCount} image={image} location={location} date={date} likes={likes} /></li>
+                    <li style={{ listStyle: 'none' }} key={index}><Post userId={userId} postId={_id} fullName={fullName} profilePic={profilePic} text={text} commentsCount={commentsCount} image={image} location={location} date={date} likes={likes} isLiked={isLiked} /></li>
                     <br />
                 </React.Fragment>
             )) : <Box sx={{textAlign:'center',display:'flex',justifyContent:'center'}}><Box sx={{display:'flex',fontSize:'18px',mt:4}}>There are no posts in your neighborhood {unhappy} </Box></Box> : <SkeletonLoading />}

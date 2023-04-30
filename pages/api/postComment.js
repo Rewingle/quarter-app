@@ -33,12 +33,12 @@ async function handler(req, res) {
                     }
                 })
                 console.log(comment)
-                client.close()
+                //client.close()
                 return res.status(200).json({ message: 'successful' })
 
                 
             }
-            client.close()
+            //client.close()
             return res.status(404).json({ message: 'error' })
 
         }
