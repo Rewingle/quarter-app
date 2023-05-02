@@ -47,6 +47,15 @@ function Comment(props) {
             })
             setComment('')
             setLoading(false)
+            props.newComment(JSON.stringify({
+                userId: userId,
+                postId: postId,
+                userName: userName,
+                fullName: fullName,
+                date: date,
+                profilePic: profilePic,
+                comment: currentComment
+            }))
         }
         else {
             alert('asd')

@@ -37,6 +37,7 @@ function Post(props) {
     const [isLiked, setLiked] = useState(props.isLiked)
     const [likeCount, setLikeCount] = useState(props.likes)
     const isProfilePicExist = props.profilePic.length == 1
+    const [newComment,setNewComment] = useState(null)
 
     const handleShowComments = async () => {
         if (props.commentsCount == 0) {
@@ -163,8 +164,8 @@ function Post(props) {
                 : <CommentsSkeleton />
                 : null
             }
-
-            <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName} />
+            {newComment?newComment.fullName:null}
+            <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName} newComment={setNewComment}/>
         </Card>
     )
 }

@@ -18,20 +18,20 @@ async function handler(req, res) {
 
                 const data = await db.collection('Provinces').find({}).project({ SehirAdi: 1, _id: 0 }).toArray()
                 res.json(data)
-                client.close()
+                //client.close()
             }
             if (body.selected == 'districts' && body.province) {
 
                 const data = await db.collection('Districts').find({ SehirAdi: body.province }).project({ IlceAdi: 1,ilceId:1 }).toArray()
                 res.json(data)
-                client.close()
+                //client.close()
 
             }
             if (body.selected == 'neighborhoods' && body.districtId) {
 
                 const data = await db.collection('Neighborhoods').find({ ilceId: body.districtId }).project({ MahalleAdi: 1 }).toArray()
                 res.json(data)
-                client.close()
+                //client.close()
 
             }
             else {
