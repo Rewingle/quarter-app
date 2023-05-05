@@ -1,11 +1,12 @@
 'use client'
 import Header from '../../Components/Header'
 import React from 'react'
-import { Box, Container } from 'theme-ui'
+import { Box, Card, Container } from 'theme-ui'
 import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import NearbyPeople from '../../Components/NearbyPeople'
 
 
 export default function LoggedLayout({ children }) {
@@ -42,15 +43,16 @@ export default function LoggedLayout({ children }) {
             redirect('/auth/login')
 
         }
-        
+
     })
-    
+
     if (status === "loading") {
 
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
     }
     const neighborhood = session.user.name.split(',')[6]
     const district = session.user.name.split(',')[5]
+    const province = session.user.name.split(',')[4]
 
     return (
         <React.Fragment>
@@ -87,7 +89,11 @@ export default function LoggedLayout({ children }) {
                                 <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'red', borderRadius: '8px' }}></Box></li>
                                 <br />
                                 <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'purple', borderRadius: '8px' }}></Box></li>
-                                <li>-NEARBY PEOPLE</li>
+                                <br/>
+                                <Card sx={{borderRadius: '1em',backgroundColor:'white',py:2}} className="drop-shadow-lg">
+                                    <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic',p:2,textAlign:'center',mb:2 }}>People you may know</Box>
+                                    <NearbyPeople address={{ 'province': province, 'district': district, 'neighborhood': neighborhood }} />
+                                </Card>
                             </ul>
 
                         </Container>
@@ -99,7 +105,7 @@ export default function LoggedLayout({ children }) {
                 <Box>
                     <Box style={styles.content}>
                         <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Link href={'/feed'}>{homeIcon}</Link></Box>Home</Box>
-                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Link  href={'/discover'}>{discover}</Link></Box>Discover</Box>
+                        <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Link href={'/discover'}>{discover}</Link></Box>Discover</Box>
                         <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{store}</Box>Business</Box>
                         <Box sx={{ px: 3, '&:hover': { cursor: 'pointer' } }}><Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{notifications}</Box>Notifications</Box>
 

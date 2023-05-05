@@ -66,9 +66,7 @@ function Comment(props) {
     return (
         <React.Fragment>
             <Box sx={{ display: 'flex', height: '66px', width: '100%', alignItems: 'center' }}>
-                <Box >{profilePic.length == 1 ? <ProfilePicHolder height={46} width={46} character={profilePic} />
-                :
-                <Image src={profilePic} width={48} height={48} className='aspect-square rounded-full'/>}</Box>
+                <Box ><ProfilePicHolder src={profilePic} width={48} height={48}/> </Box>
                 <Box sx={{ width: '80%' }}>
                     <Box sx={{ position: 'relative' }}>
                         <Box style={styles.inputContainer}>

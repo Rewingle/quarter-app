@@ -29,6 +29,7 @@ export default async function handler(req, res) {
                         commentsCount: post.comments.length,
                         text: post.text,
                         tags: post.tags,
+                        image: post.image,
                         likes: post.likes.length,
                         isLiked: post.likes.includes(data.userId.toString())
                     }

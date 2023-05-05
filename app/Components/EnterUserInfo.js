@@ -31,7 +31,6 @@ function EnterUserInfo(props) {
   const [lastName, setLastName] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isRegister, setRegister] = useState(false)
-  const [isImageUploaded, setImageUploaded] = useState(false)
   const [uploadedPhotoLocation, setUploadPhotoLocation] = useState(null)
 
   const [file, setFile] = useState(null)
@@ -52,7 +51,7 @@ function EnterUserInfo(props) {
     const character = firstName.substring(0, 1).toUpperCase()
     if (file) {
       setLoading(true);
-      console.log('FİLEE BURADADADAADA')
+ 
       const config = {
         bucketName: 'quarter-app',
         dirName: 'profilePics',
@@ -63,8 +62,7 @@ function EnterUserInfo(props) {
       }
       const S3CustomClient = new AWSS3UploadAsh(config);
       const upload = await S3CustomClient.uploadFile(file, file.type, undefined, file.name, "public-read")
-        /* .then(res=> res.json())
-        .catch((err) => alert(err)) */
+ 
 
       console.log(uploadedPhotoLocation)
       console.log(upload)

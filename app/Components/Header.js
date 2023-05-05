@@ -118,9 +118,8 @@ export default function Header() {
                                         <div style={{ backgroundColor: 'dimgray', borderRadius: '50%', zIndex: 50, bottom: 0, right: 0, height: '14px', width: '14px', position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             {dropArrow}
                                         </div>
-                                        {session.user.image.length == 1 ? <ProfilePicHolder height={44} width={44} character={session.user.image} />
-                                            :
-                                            <Image src={session.user.image} width={46} height={46} className='aspect-square rounded-full' />}
+                                        <ProfilePicHolder height={44} width={44} src={session.user.image} />
+
                                     </Container>
 
                                 </Box>
@@ -140,9 +139,8 @@ export default function Header() {
                 <Box sx={styles.menuItems}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
 
-                        {session.user.image.length == 1? <ProfilePicHolder height={44} width={44} character={session.user.image} />
-                            :
-                            <Image src={session.user.image} width={46} height={46} className='aspect-square rounded-full' />}
+                        <ProfilePicHolder height={44} width={44} src={session.user.image} />
+
                         <Box sx={{ marginLeft: '1em', fontWeight: '600', fontSize: '18px' }}>{fullname}</Box>
                     </Box>
                     <br />

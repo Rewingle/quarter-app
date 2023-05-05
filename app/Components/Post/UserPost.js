@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Button, Flex, Input, Card, Textarea } from 'theme-ui'
 import Image from 'next/image'
 import Popup from '../Popup'
@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react'
 import ProfilePicHolder from '../ProfilePicHolder'
 import DotLoader from 'react-spinners/DotLoader'
 import { animated, useSpring } from '@react-spring/web'
+import AWSS3UploadAsh from 'aws-s3-upload-ash'
 
 function UserPost() {
     const image = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 opacity-60">
@@ -32,8 +33,11 @@ function UserPost() {
     const remove = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
+    const close = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-50 cursor-pointer">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
 
-    
+
 
     //SET USER INFO
     const { data: session } = useSession()
@@ -49,7 +53,7 @@ function UserPost() {
     const [buttonPopup, setButtonPopup] = useState(false)
     const [isTagSelected, setTagSelected] = useState(false)
     const [isAddPhotoSelected, setAddPhotoSelected] = useState(false)
-    const [tagColor, setTagColor] = useState("black")
+
 
     //REACT SPRING
     const tagSlide = useSpring({
@@ -57,6 +61,12 @@ function UserPost() {
     })
     const photoSlide = useSpring({
         height: isAddPhotoSelected ? 100 : 0,
+    })
+    const displaySlide = useSpring({
+        display: isAddPhotoSelected ? 'block' : 'none'
+    })
+    const opacitySlide = useSpring({
+        opacity: isAddPhotoSelected ? 1 : 0.4
     })
 
     //TAGS
@@ -73,7 +83,7 @@ function UserPost() {
         { name: 'Greeting' },
         { name: 'Question' }
     ]
-    const [clickedTag, setClickedTag] = useState([])
+
     const [selectedTags, setSelectedTags] = useState([])
 
     //GET CURRENT DATE
@@ -84,40 +94,120 @@ function UserPost() {
     const date = `${current.getDate()} ${monthNames[current.getMonth()]}`;
 
     const handlePost = async (text) => {
+        setLoading(true);
+
         if (text != null) {
-            setLoading(true);
-            await fetch('/api/addPost', {
-                method: 'POST', body: JSON.stringify({
-                    postedBy: id,
-                    date: date,
-                    likes: 0,
-                    location: address,
-                    profilePic: profilePic,
-                    text: text,
-                    tags: selectedTags,
-                    comments: [],
-                    userName: userName,
-                    fullName: fullName
+
+            if (file) {
+
+
+                const config = {
+                    bucketName: 'quarter-app',
+                    dirName: 'postPics',
+                    region: 'eu-central-1',
+                    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+                    s3Url: 'https://quarter-app.s3.amazonaws.com/'
+                }
+                const S3CustomClient = new AWSS3UploadAsh(config);
+                const upload = await S3CustomClient.uploadFile(file, file.type, undefined, file.name, "public-read")
+
+                await fetch('/api/addPost', {
+                    method: 'POST', body: JSON.stringify({
+                        postedBy: id,
+                        date: date,
+                        likes: [],
+                        location: address,
+                        profilePic: profilePic,
+                        text: text,
+                        tags: selectedTags,
+                        comments: [],
+                        image: upload.location? upload.location : null,
+                        userName: userName,
+                        fullName: fullName,
+
+                    })
                 })
-            })
-            setLoading(false)
+                setLoading(false)
+                setButtonPopup(false)
+                setFileDataURL(null)
+            }
+            else {
+                await fetch('/api/addPost', {
+                    method: 'POST', body: JSON.stringify({
+                        postedBy: id,
+                        date: date,
+                        likes: [],
+                        location: address,
+                        profilePic: profilePic,
+                        text: text,
+                        tags: selectedTags,
+                        comments: [],
+                        image: null,
+                        userName: userName,
+                        fullName: fullName,
+
+                    })
+                })
+                setLoading(false)
+                setButtonPopup(false)
+
+            }
+
         }
         else {
-            alert('asd')
+            alert('Invalid post')
         }
-
     }
     const handleRemoveTag = (name) => {
 
         const newTags = selectedTags.filter(item => item !== name)
         setSelectedTags(newTags)
     }
+
+
     const handleAddTag = (name) => {
         if (selectedTags.length == 3) {
             return
         }
         setSelectedTags(previous => [...previous, name])
     }
+    //ADD IMAGE
+    const [file, setFile] = useState(null)
+    const [fileDataURL, setFileDataURL] = useState(null);
+
+    const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
+    useEffect(() => {
+        let fileReader, isCancel = false;
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onload = (e) => {
+                const { result } = e.target;
+                if (result && !isCancel) {
+                    setFileDataURL(result)
+                }
+            }
+            fileReader.readAsDataURL(file);
+        }
+        return () => {
+            isCancel = true;
+            if (fileReader && fileReader.readyState === 1) {
+                fileReader.abort();
+            }
+        }
+
+    }, [file]);
+
+    const handleFile = (e) => {
+        const file = e.target.files[0];
+        if (!file.type.match(imageMimeType)) {
+            alert("Image mime type is not valid");
+            return;
+        }
+        setFile(file);
+    }
+
     return (
         <Box sx={styles.main}>
 
@@ -126,9 +216,7 @@ function UserPost() {
 
                 <Card sx={styles.post} className="drop-shadow-lg">
                     <Flex sx={{ width: '100%', top: 0, height: '3em', justifyContent: 'center', alignItems: 'center' }}>
-                        <Box >{profilePic.length == 1 ? <ProfilePicHolder height={46} width={46} character={profilePic} />
-                            :
-                            <Image src={profilePic} width={48} height={48} className='aspect-square rounded-full'/>}</Box>
+                        <Box ><ProfilePicHolder width={48} height={48} src={profilePic}/></Box>
                         <Input sx={{ borderRadius: '2em', width: '80%', marginLeft: '2em' }} placeholder='What are you thinking ?' onClick={() => setButtonPopup(true)}></Input>
 
                     </Flex>
@@ -137,9 +225,9 @@ function UserPost() {
                 </Card>
 
                 <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-                    <Box sx={{ display: 'flex', mb: '0.4em' }}>{selectedTags[0] ? <Box sx={{ opacity: '0.6', fontSize: '15px', fontWeight: '600' }}>Tags;</Box> : null}{selectedTags.map(name => <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', ':hover': { cursor: 'pointer' }, fontWeight: '600', opacity: 0.6 }} onClick={() => { handleRemoveTag(name) }}>{remove}{name}</Box>)}</Box>
                     {!isLoading ?
                         <form>
+                            <Box sx={{ display: 'flex', mb: '0.4em' }}>{selectedTags[0] ? <Box sx={{ opacity: '0.6', fontSize: '15px', fontWeight: '600' }}>Tags;</Box> : null}{selectedTags.map(name => <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', ':hover': { cursor: 'pointer' }, fontWeight: '600', opacity: 0.6 }} onClick={() => { handleRemoveTag(name) }}>{remove}{name}</Box>)}</Box>
 
 
                             <Box sx={styles.inputContainer}>
@@ -190,18 +278,36 @@ function UserPost() {
                                     marginTop: '0.5em',
                                     borderRadius: '1em',
                                     overflow: 'hidden',
+
                                     height: photoSlide.height,
-                                    borderRadius: 8,
+                                    display: displaySlide.display,
+                                    opacity: opacitySlide.opacity,
+                                    borderRadius: 8
                                 }}
                             >
-                                <Box sx={{ p: 1 }} >
-                                    <Box onClick={() => { alert('WORK IN PROGRESS') }} sx={{ border: '4px solid green', borderStyle: 'dotted', borderRadius: '1em', height: '5em', width: '100%', opacity: '0.6', display: 'flex', justifyContent: 'center', alignItems: 'center', ':hover': { cursor: 'pointer' } }}>{bigImage} <Box sx={{ color: '#3B8C66', fontWeight: '600', ml: 2 }}>ADD IMAGE</Box> </Box>
+                                {fileDataURL ?
+                                    <p className="img-preview-wrapper">
 
-                                </Box>
+                                        <Box>
+                                            <img src={fileDataURL} alt="preview" style={{ width: '5em', height: '5em', borderRadius: '1em', display: 'flex', position: 'absolute', zIndex: 1, ':hover': { cursor: 'pointer' } }} />
+                                        </Box>
+
+                                    </p> : <Box sx={{ position: 'relative' }}>
+                                        <Box sx={{ border: '4px solid green', position: 'absolute', zIndex: 0, borderStyle: 'dotted', borderRadius: '1em', height: '5em', width: '100%', opacity: '0.6', display: 'flex', justifyContent: 'center', alignItems: 'center', ':hover': { cursor: 'pointer' } }}>ADD PHOTO</Box>
+                                        <Input sx={{ position: 'relative', opacity: 0, zIndex: 2, height: '5em', ':hover': { cursor: 'pointer' } }}
+                                            type="file"
+                                            id='image'
+                                            accept='.png, .jpg, .jpeg'
+                                            onChange={handleFile}
+                                            placeholder='ADD IMAGEEE'
+                                        />
+                                    </Box>}
+
+
                             </animated.div>
 
                             <Box sx={styles.buttonsContainer}>
-                                <Box onClick={() => { setAddPhotoSelected(!isAddPhotoSelected) }} sx={{ display: 'flex', alignItems: 'center', width: ['10em', '10em', '10em', null, null], opacity: 0.7, backgroundColor: '#3B8C66', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{image}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ADD PHOTO </Box></Box>
+                                {fileDataURL ? <Box onClick={() => { setFileDataURL(null) }} sx={{ display: 'flex', alignItems: 'center', width: ['10em', '10em', '10em', null, null], opacity: 0.7, backgroundColor: 'red', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{close}</Box><Box sx={{ ml: 1, fontWeight: '600', fontSize: '14px' }}>REMOVE PHOTO </Box></Box> : <Box onClick={() => { if (fileDataURL) { return }; setAddPhotoSelected(!isAddPhotoSelected) }} sx={{ display: 'flex', alignItems: 'center', width: ['10em', '10em', '10em', null, null], opacity: 0.7, backgroundColor: '#3B8C66', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{image}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ADD PHOTO </Box></Box>}
                                 <Box onClick={() => { setTagSelected(!isTagSelected) }} sx={{ ml: [0, 0, 0, 3, 3], mt: [3, 3, 3, 0, 0], width: ['8em', '8em', '8em', null, null], display: 'flex', alignItems: 'center', opacity: 0.7, backgroundColor: '#F24405', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{tag}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ADD TAG </Box></Box>
                                 <Box sx={{ ml: [0, 0, 0, 3, 3], mt: [3, 3, 3, 0, 0], width: ['12em', '12em', '12em', null, null], display: 'flex', alignItems: 'center', opacity: 0.7, backgroundColor: '#7A577A', color: 'white', px: 2, borderRadius: '1em', ':hover': { opacity: 1, cursor: 'pointer' } }}><Box sx={{ p: 1 }}>{event}</Box><Box sx={{ ml: 1, fontWeight: '600' }}>ORGANISE EVENT </Box></Box>
 
@@ -209,14 +315,14 @@ function UserPost() {
 
                             <br />
 
-      
+
                             <Box sx={{ display: 'flex', width: '100%' }}>
 
                                 <Box sx={{ display: 'flex', width: '80%', fontSize: '14px', alignItems: 'center' }}>{locationIcon}{address}</Box>
                                 <Box sx={{ width: '20%' }}><Button sx={{ fontWeight: '600', float: 'right', width: '6em' }} type='submit' className="bg-gradient-to-r from-teal-400 to-cyan-500" onClick={(e) => { handlePost(text) }}>POST</Button></Box>
                             </Box>
                         </form> : <DotLoader color='#14B8A6' size={32} />}
-                    
+
 
                 </Popup>
             </Flex>
@@ -269,6 +375,7 @@ const styles = {
     buttonsContainer: {
         display: ['block', 'block', 'block', 'flex', 'flex'],
         mt: 3,
+        zIndex: 200
     },
     tag: {
 

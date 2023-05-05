@@ -6,6 +6,7 @@ import Comment from './Comment'
 import Link from 'next/link'
 import ProfilePicHolder from '../ProfilePicHolder'
 import { keyframes } from '@emotion/react'
+import ImagePopup from '../ImagePopup'
 
 function Post(props) {
     const locationIcon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
@@ -37,7 +38,8 @@ function Post(props) {
     const [isLiked, setLiked] = useState(props.isLiked)
     const [likeCount, setLikeCount] = useState(props.likes)
     const isProfilePicExist = props.profilePic.length == 1
-    const [newComment,setNewComment] = useState(null)
+    const [newComment, setNewComment] = useState(null)
+    const [buttonPopup, setButtonPopup] = useState(false)
 
     const handleShowComments = async () => {
         if (props.commentsCount == 0) {
@@ -105,68 +107,83 @@ function Post(props) {
 
     }
 
-
     return (
-        <Card sx={styles.post} className="drop-shadow-lg">
-            <Box sx={{ width: '100%', top: 0, display: 'flex' }}>
-                <Box sx={styles.userInfo}>
-                    <div style={{ gridRow: '1/span 2', width: '46px', height: '46px' }}>
-                        {isProfilePicExist ? <ProfilePicHolder width={46} height={46} character={props.profilePic} /> : <Image src={props.profilePic} width='46' height='46' style={{ borderRadius: '50%' }} />}</div>
-                    <Box sx={{ marginLeft: '1em' }}>
-                        <Box sx={{ display: 'flex', width: '100%' }}>
-                            <Box sx={styles.fullName}><Link href={'/user/' + props.userName}>{props.fullName}</Link></Box>
-                            <Box sx={{ float: 'right' }}></Box>
+        <>
+            <ImagePopup trigger={buttonPopup} setTrigger={setButtonPopup}>
+                <Box>
+
+
+                    <Box className={`next-image-wrapper`} sx={{ position: 'relative', height: '32em' }}>
+                      
+                        <Image  src={props.image} fill style={{ objectFit: 'contain' }} />
+                       
+                    </Box>
+                    <Box>{props.location}<br/>{props.date}</Box>
+                </Box>
+            </ImagePopup>
+            <Card sx={styles.post} className="drop-shadow-lg">
+                <Box sx={{ width: '100%', top: 0, display: 'flex' }}>
+                    <Box sx={styles.userInfo}>
+                        <div style={{ gridRow: '1/span 2', width: '46px', height: '46px' }}>
+                            <ProfilePicHolder width={46} height={46} src={props.profilePic} /> </div>
+                        <Box sx={{ marginLeft: '1em' }}>
+                            <Box sx={{ display: 'flex', width: '100%' }}>
+                                <Box sx={styles.fullName}><Link href={'/user/' + props.userName}>{props.fullName}</Link></Box>
+                                <Box sx={{ float: 'right' }}></Box>
+                            </Box>
+
+                            <Box sx={{ fontSize: '16px', fontWeight: 'lighter', display: 'flex', opacity: 0.7 }}><span>{locationIcon}</span><span>{props.location} , {props.date}</span> <span style={{ float: 'right' }}></span></Box>
                         </Box>
 
-                        <Box sx={{ fontSize: '16px', fontWeight: 'lighter', display: 'flex', opacity: 0.7 }}><span>{locationIcon}</span><span>{props.location} , {props.date}</span> <span style={{ float: 'right' }}></span></Box>
+                    </Box>
+                    <Box sx={{ float: 'right' }}>{moreBig}</Box>
+                </Box>
+
+
+                <Container sx={{ p: 1, mt: 2 }}>{props.text}</Container>
+
+                {props.image ? <Box onClick={() => { setButtonPopup(true) }} sx={{ display: 'flex', mt: 2, justifyContent: 'center', alignItems: 'center', width: '100%', backgroundColor: '#f8f8f8', ':hover': { cursor: 'pointer' } }}>
+
+                    <Image src={props.image} height={640} width={420} />
+                </Box> : null}
+
+                <Box sx={{ mt: 1 }}>
+
+                    <Box sx={{ display: 'flex', marginBottom: '1em', float: 'right' }}>
+
+                        <Box onClick={() => { handleLike() }} sx={{ display: 'flex', p: 1, borderRadius: '16px', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span>{isLiked ? liked : like}</span> {isLiked ? <span style={{ marginLeft: '0.4em', fontWeight: '600' }}>{likeCount}</span> : <span style={{ marginLeft: '0.4em', fontWeight: '600' }}>{likeCount}</span>}</Box>
+
+                        <Box onClick={() => { handleShowComments() }} sx={{ display: 'flex', p: 1, borderRadius: '16px', alignItems: 'center', justifyContent: 'center', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' }, fontWeight: '600' }}><span style={{ marginLeft: '1em' }}>{comment}</span><span style={{ marginLeft: '0.4em' }}>{props.commentsCount > 0 ? props.commentsCount : null}</span><span style={{ marginLeft: '0.2em' }}>Comments</span></Box>
+
                     </Box>
 
                 </Box>
-                <Box sx={{ float: 'right' }}>{moreBig}</Box>
-            </Box>
+                <hr style={{ marginTop: '1.4em' }} />
+                {showComments ? !commentsLoading ?
+                    <Box>
+                        {comments ? comments.map(({ fullName, text, profilePic, date, userName }, index) => (
+                            <Box sx={{ mt: '30px' }} key={index}>
 
+                                <Box sx={{ display: 'flex', justifyContent: 'right' }}>
 
-            <Container sx={{ p: 1 }}>{props.text}</Container>
-            {props.image ? <Box>
-                <img src={props.image}></img>
-            </Box> : null}
+                                    <Box sx={{ mr: 2 }}>
+                                        <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600, ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}><Link href={'/user/' + userName}>{fullName}</Link></Box>
+                                        <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#f8f8f8', p: 1, fontSize: '15px', borderRadius: '12px' }}>{text}</Box>
+                                        <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>{date}</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 2 }}>{more}</Box></Box>
 
-            <Box sx={{ mt: 1 }}>
-
-                <Box sx={{ display: 'flex', marginBottom: '1em', float: 'right' }}>
-
-                    <Box onClick={() => { handleLike() }} sx={{ display: 'flex', p: 1, borderRadius: '16px', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' } }}><span>{isLiked ? liked : like}</span> {isLiked ? <span style={{ marginLeft: '0.4em', fontWeight: '600' }}>{likeCount}</span> : <span style={{ marginLeft: '0.4em', fontWeight: '600' }}>{likeCount}</span>}</Box>
-
-                    <Box onClick={() => { handleShowComments() }} sx={{ display: 'flex', p: 1, borderRadius: '16px', alignItems: 'center', justifyContent: 'center', ':hover': { backgroundColor: '#f6f6f6', cursor: 'pointer' }, fontWeight: '600' }}><span style={{ marginLeft: '1em' }}>{comment}</span><span style={{ marginLeft: '0.4em' }}>{props.commentsCount > 0 ? props.commentsCount : null}</span><span style={{ marginLeft: '0.2em' }}>Comments</span></Box>
-
-                </Box>
-
-            </Box>
-            <hr style={{ marginTop: '1.4em' }} />
-            {showComments ? !commentsLoading ?
-                <Box>
-                    {comments ? comments.map(({ fullName, text, profilePic, date, userName }, index) => (
-                        <Box sx={{ mt: '30px' }} key={index}>
-
-                            <Box sx={{ display: 'flex', justifyContent: 'right' }}>
-
-                                <Box sx={{ mr: 2 }}>
-                                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', fontWeight: 600, ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}><Link href={'/user/' + userName}>{fullName}</Link></Box>
-                                    <Box sx={{ textAlign: 'right', display: 'flex', justifyContent: 'right', backgroundColor: '#f8f8f8', p: 1, fontSize: '15px', borderRadius: '12px' }}>{text}</Box>
-                                    <Box sx={{ display: 'flex', fontSize: '13px', fontWeight: 600, justifyContent: 'right' }}><Box>{date}</Box><Box sx={{ marginLeft: '2em', ':hover': { cursor: 'pointer', textDecoration: 'underline' } }}>Like</Box><Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 2 }}>{more}</Box></Box>
-
+                                    </Box>
+                                    <ProfilePicHolder src={profilePic} width={44} height={44} />
                                 </Box>
-                                {profilePic.length == 1 ? <ProfilePicHolder width={44} height={44} character={profilePic} /> : <ProfilePicHolder src={profilePic} width={44} height={44} />}
                             </Box>
-                        </Box>
-                    )) : null}
-                </Box>
-                : <CommentsSkeleton />
-                : null
-            }
-            {newComment?newComment.fullName:null}
-            <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName} newComment={setNewComment}/>
-        </Card>
+                        )) : null}
+                    </Box>
+                    : <CommentsSkeleton />
+                    : null
+                }
+                {newComment ? newComment.fullName : null}
+                <Comment profilePic={props.profilePic} character={props.fullName} postId={props.postId} userName={props.userName} fullName={props.fullName} newComment={setNewComment} />
+            </Card>
+        </>
     )
 }
 const styles = {

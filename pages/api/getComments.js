@@ -7,36 +7,26 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         const data = JSON.parse(req.body)
         if (data.postId) {
-       
-            const {db} = await connectToDatabase();
-
+            let joined = []
+            const { db } = await connectToDatabase();
 
             const postId = new ObjectId(data.postId.toString())
-            const response = await db.collection('posts').find({ _id: postId }).project({ comments: 1, _id: 0 }).toArray()
-            const comments = response[0].comments
-            console.log(comments)
+            await db.collection('posts').find({ _id: postId }).sort({ _id: -1 }).project({ comments: 1, _id: 0 }).forEach(async(post) => {
+                const comments = post.comments
 
-            const commentCount = comments.length
-
-            let joined = []
-
-
-            try {
-                var processedComments = 0
-                comments.forEach(async (comment) => {
-                  
-
-                    const user = await db.collection('users').findOne({ _id: comment.userId })
-                    joined.push({ fullName: user.firstName + ' ' + user.lastName, text: comment.text, profilePic: user.profilePic, date: comment.date, userName: comment.userName })
-                    processedComments++
-                    if(commentCount == processedComments){
-                        console.log(joined)
-                        res.status(200).json(joined)
+                for (const comment of comments){
                  
-                    }
-                })
-            } catch (err) { console.log('errror'); res.status(400).json({message:'error'}) }
+                    await db.collection('users').findOne({ _id: comment.userId }).then((user) => {
+                        
+                        joined.push({ fullName: user.firstName + ' ' + user.lastName, text: comment.text, profilePic: user.profilePic, date: comment.date, userName: comment.userName })
+                    
+                    }).catch((err)=>res.status(404).json({message:err}))
+                }
+                res.status(200).json(joined)
+     
 
+            }) 
+    
 
         }
         else {
