@@ -40,6 +40,8 @@ function Post(props) {
     const isProfilePicExist = props.profilePic.length == 1
     const [newComment, setNewComment] = useState(null)
     const [buttonPopup, setButtonPopup] = useState(false)
+    const [hasMoreComments, setHasMoreComments] = useState(false)
+    const [commentsBetween, setCommentsBetween] = useState(1)
 
     const handleShowComments = async () => {
         if (props.commentsCount == 0) {
@@ -53,9 +55,10 @@ function Post(props) {
                 setCommentsLoading(true)
                 await fetch('/api/getComments', {
                     method: 'POST', body: JSON.stringify({
+                        commentsBetween: commentsBetween,
                         postId: props.postId
                     })
-                }).then(res => res.json().then(data => { console.log(data); setComments(data); setCommentsLoading(false) })).catch((err) => { console.log(err); setCommentsLoading(false) })
+                }).then(res => res.json().then(data => { setComments(data.comments); console.log(data); setHasMoreComments(data.hasMore); setCommentsBetween(commentsBetween + 1); setCommentsLoading(false) })).catch((err) => { console.log(err); setCommentsLoading(false) })
 
             }
             else {
@@ -68,6 +71,22 @@ function Post(props) {
         }
 
 
+
+    }
+    const getMoreComments = async () => {
+        await fetch('/api/getComments', {
+            method: 'POST', body: JSON.stringify({
+                commentsBetween: commentsBetween,
+                postId: props.postId
+            })
+        }).then(res => res.json().then(data => {
+            const newComments = data.comments.concat(comments)
+            setComments(newComments);
+            console.log(comments);
+            setHasMoreComments(data.hasMore);
+            //setCommentsBetween(commentsBetween + 1);
+            setCommentsLoading(false);
+        })).catch((err) => { console.log(err); setCommentsLoading(false) })
 
     }
     const handleLike = async () => {
@@ -114,11 +133,11 @@ function Post(props) {
 
 
                     <Box className={`next-image-wrapper`} sx={{ position: 'relative', height: '32em' }}>
-                      
-                        <Image  src={props.image} fill style={{ objectFit: 'contain' }} />
-                       
+
+                        <Image src={props.image} fill style={{ objectFit: 'contain' }} />
+
                     </Box>
-                    <Box>{props.location}<br/>{props.date}</Box>
+                    <Box>{props.location}<br />{props.date}</Box>
                 </Box>
             </ImagePopup>
             <Card sx={styles.post} className="drop-shadow-lg">
@@ -159,8 +178,11 @@ function Post(props) {
 
                 </Box>
                 <hr style={{ marginTop: '1.4em' }} />
+
                 {showComments ? !commentsLoading ?
+
                     <Box>
+                        {hasMoreComments ? <Box onClick={() => { setCommentsBetween(commentsBetween + 1);getMoreComments() }} sx={{':hover':{textDecoration:'underline',cursor:'pointer',color:'#0284c7'},mt:2,fontWeight:600,display:'flex'}}>More Comments</Box> : null}
                         {comments ? comments.map(({ fullName, text, profilePic, date, userName }, index) => (
                             <Box sx={{ mt: '30px' }} key={index}>
 

@@ -16,7 +16,7 @@ function NearbyPeople(props) {
             await fetch('/api/getNearbyPeople', {
                 method: 'POST',
                 body: JSON.stringify({ address: props.address })
-            }).then(res => res.json().then(data => { console.log(data); setPeople(data) })).catch(err => console.log(err))
+            }).then(res => res.json().then(data => {setPeople(data) })).catch(err => console.log(err))
         }
         getPeople()
     }, [])
