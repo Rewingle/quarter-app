@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Box, Button, Flex, Input, Card, Textarea } from 'theme-ui'
-import Image from 'next/image'
 import Popup from '../Popup'
 import { useSession } from 'next-auth/react'
 import ProfilePicHolder from '../ProfilePicHolder'
@@ -217,7 +216,7 @@ function UserPost() {
                 <Card sx={styles.post} className="drop-shadow-lg">
                     <Flex sx={{ width: '100%', top: 0, height: '3em', justifyContent: 'center', alignItems: 'center' }}>
                         <Box ><ProfilePicHolder width={48} height={48} src={profilePic}/></Box>
-                        <Input sx={{ borderRadius: '2em', width: '80%', marginLeft: '2em' }} placeholder='What are you thinking ?' onClick={() => setButtonPopup(true)}></Input>
+                        <Input onChange={(e)=>{e.target.value = ""}} sx={{ borderRadius: '2em', width: '80%', marginLeft: '2em' }} placeholder='What are you thinking ?' onClick={() => setButtonPopup(true)}></Input>
 
                     </Flex>
                     <br />

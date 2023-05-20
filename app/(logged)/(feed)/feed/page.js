@@ -14,7 +14,7 @@ export default function Page() {
         <div style={{ width: '42em' }}>
 
             <UserPost />
-
+            <br/>
             <TopFeedBar />
 
             <Feed />

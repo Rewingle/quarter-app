@@ -1,17 +1,19 @@
 import { MongoClient } from 'mongodb';
+import { connectToDatabase } from '../../lib/mongo';
 
 async function handler(req, res) {
 
     if (req.method === 'POST') {
         const data = JSON.parse(req.body)
         if (data) {
-            const client = await MongoClient.connect(
-                `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.rg9svuz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
-                { useNewUrlParser: true, useUnifiedTopology: true }
-            );
-            const db = client.db();
+            const { db } = await connectToDatabase();
+        
 
-            db.collection('posts').insertOne(data)
+            await db.collection('posts').insertOne(data,(err)=>{
+                if(err){console.log(err); return};
+                var objectId = data.objectId;
+                console.log(objectId)
+            })
 
             return res.status(200).json({ message: 'successful' })
 
