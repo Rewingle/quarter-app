@@ -5,20 +5,43 @@ import { ObjectId } from 'mongodb';
 export default async function handler(req, res) {
     if (req.method == 'POST') {
         const data = JSON.parse(req.body)
+        // location = address[{province},{district},{neighborhood}]
 
-         // location = address[{province},{district},{neighborhood}]
-       
-        if (data.location && data.userId) {
+        if (data.location && data.userId && data.postsBetween) {
             try {
-
+                console.log(data.postsBetween)
                 const { db } = await connectToDatabase();
 
-                const dbres = await db.collection("posts").find({ location: data.location }).limit(10).sort({ _id: -1 }).toArray();
-                const posts = JSON.parse(JSON.stringify(dbres));
+                const dbres = await db.collection("posts").find({ location: data.location }).sort({ _id: -1 }).toArray();
+                /*  await db.collection('posts').aggregate([{
+                     $match: {
+                         location: data.location
+                     }
+                 }, {
+                     $project: {
+ 
+                     }
+                 },{
+                     $sort:{_id:-1}
+                 }]) */
+                //console.log(dbres)
+                console.log(data.postsBetween.from)
+                console.log(dbres.length)
+                let hasMore = true
+                if (data.postsBetween.from >= dbres.length ) {
+                    hasMore = false
+                }
+                //console.log(dbres.slice(data.postsBetween.from, data.postsBetween.to))
+                let postsBetween = {from: data.postsBetween.from, to: data.postsBetween.to}
+                if(postsBetween.from > 0){
+                    postsBetween.from = postsBetween.from + 1;
+                    postsBetween.to = postsBetween.to + 1;
+                }
+                const posts = JSON.parse(JSON.stringify(dbres.slice(postsBetween.from, postsBetween.to)));
                 const userId = new ObjectId(data.userId.toString())
-            
+
                 const filtered = posts.map(post => {
-                    
+
                     return {
                         _id: post._id,
                         fullName: post.fullName,
@@ -35,7 +58,7 @@ export default async function handler(req, res) {
                     }
                 });
 
-                res.send(filtered)
+                res.send({ hasMore: hasMore, posts: filtered })
                 //client.close()
             }
             catch (e) {
