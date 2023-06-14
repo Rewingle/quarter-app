@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { Box, Button, Container, Input, Flex, Select } from 'theme-ui'
+import { Box, Button, Container, Input, Flex } from 'theme-ui'
 import { signIn } from 'next-auth/react';
 import DotLoader from 'react-spinners/DotLoader'
 import SelectAddress from './SelectAddress';

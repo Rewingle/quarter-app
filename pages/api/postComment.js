@@ -13,12 +13,12 @@ async function handler(req, res) {
             ); 
             const db = client.db() */
             const {db} = await connectToDatabase();
-            console.log(data)
+       
             if (data.postId && data.comment) {
                 
                 const postId = new ObjectId(data.postId.toString())
                 const userId = new ObjectId(data.userId.toString())
-                console.log(data.date)
+            
                 const comment = await db.collection("posts").updateOne({ _id: postId }, {
                     $push: {
                         "comments": {
@@ -32,7 +32,7 @@ async function handler(req, res) {
                         }
                     }
                 })
-                console.log(comment)
+
                 //client.close()
                 return res.status(200).json({ message: 'successful' })
 

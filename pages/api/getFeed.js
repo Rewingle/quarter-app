@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
         if (data.location && data.userId && data.postsBetween) {
             try {
-                console.log(data.postsBetween)
+
                 const { db } = await connectToDatabase();
 
                 const dbres = await db.collection("posts").find({ location: data.location }).sort({ _id: -1 }).toArray();
@@ -25,8 +25,7 @@ export default async function handler(req, res) {
                      $sort:{_id:-1}
                  }]) */
                 //console.log(dbres)
-                console.log(data.postsBetween.from)
-                console.log(dbres.length)
+       
                 let hasMore = true
                 if (data.postsBetween.from >= dbres.length ) {
                     hasMore = false

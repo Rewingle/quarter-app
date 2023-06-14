@@ -147,7 +147,7 @@ export default function Header() {
                     <hr />
 
                     <ul style={{ fontSize: '18px' }}>
-                        <Link href={'/user/' + userName}><li>{account} <div>Profile</div></li></Link>
+                        <Link href={'/profile'}><li>{account} <div>Profile</div></li></Link>
                         <Link href='/settings'><li>{settings} <div>Settings</div> </li></Link>
                         <Link href='/support'><li>{help} <div>Help and Support</div></li></Link>
                         <li onClick={() => { signOut({ callbackUrl: '/' }) }}>{logout}<div>Log out</div></li>

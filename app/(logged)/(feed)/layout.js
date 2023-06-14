@@ -50,6 +50,7 @@ export default function LoggedLayout({ children }) {
 
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
     }
+    const userId = session.user.name.split(',')[0]
     const neighborhood = session.user.name.split(',')[6]
     const district = session.user.name.split(',')[5]
     const province = session.user.name.split(',')[4]
@@ -92,7 +93,7 @@ export default function LoggedLayout({ children }) {
                                 <br/>
                                 <Card sx={{borderRadius: '1em',backgroundColor:'white',py:2}} className="drop-shadow-lg">
                                     <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic',p:2,textAlign:'center',mb:2 }}>People you may know</Box>
-                                    <NearbyPeople address={{ 'province': province, 'district': district, 'neighborhood': neighborhood }} />
+                                    <NearbyPeople address={{ 'province': province, 'district': district, 'neighborhood': neighborhood }} userId={userId}/>
                                 </Card>
                             </ul>
 

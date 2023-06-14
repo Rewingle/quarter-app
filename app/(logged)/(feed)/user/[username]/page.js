@@ -1,8 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Box, Card, Container, Button } from 'theme-ui'
-import Image from 'next/image'
+import { useSession } from 'next-auth/react'
+import DotLoader from 'react-spinners/DotLoader'
 import ProfilePicHolder from '../../../../Components/ProfilePicHolder'
+import Post from '../../../../Components/Post/Post'
+import { keyframes } from '@emotion/react'
 
 export default function page({ params }) {
   const addFriend = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -12,49 +15,146 @@ export default function page({ params }) {
     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
   </svg>
   const home = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 opacity-80">
-  <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
-  <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
-</svg>
+    <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+    <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+  </svg>
+  const settings = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
 
+
+  const { data: session, status } = useSession()
+  if (status === "loading") {
+
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><DotLoader color='#14B8A6' size={30} /></div>
+  }
 
   const [user, setUser] = useState()
+  const [posts, setPosts] = useState()
+
+  const userId = session.user.name.split(',')[0]
+
   useEffect(() => {
     const getUserInfo = async () => {
       await fetch('/api/getUserInfo',
         {
           method: 'POST',
           body: JSON.stringify({
-            userName: params.username
+            userName: params.username,
+            userId: userId
           })
-        }).then(res => res.json().then(data => { setUser(data) }))
+        }).then(res => res.json().then(data => {
+          setUser(data.user);
+          if (data.posts) {
+            setPosts(data.posts)
+          }
+        }))
     }
     getUserInfo()
   }, [])
+  const UserInfoSkeleton = () => {
+    const fadeIn = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } })
+    return (
+      <React.Fragment>
+        <Container sx={styles.picContainer}>
+          <Box sx={styles.pic}>
+            <Box sx={{ borderRadius: '50%', width: '92px', height: '92px', backgroundColor: 'gainsboro' }}></Box>
+          </Box>
+          <Box sx={{ width: '100%', animation: `${fadeIn} 2s backwards infinite` }}>
+            <Box sx={{ py: 4 }}>
+              <Box sx={{ width: '12em', height: '2em', backgroundColor: '#d4d4d4', borderRadius: '1em' }}></Box>
+              <Box sx={{ display: 'flex', mt: 2 }}>
+                <Box sx={{ width: '16em', height: '1em', backgroundColor: '#e4e4e7', borderRadius: '1em' }}></Box>
+
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+        <Box sx={{ display: 'flex', px: 4, py: 2, alignItems: 'center', animation: `${fadeIn} 2s backwards infinite` }}>
+          <Button sx={{ display: 'flex', width: '8em', height: '2em', opacity: 0.8, borderRadius: '0.5em', backgroundColor: '#e4e4e7' }}></Button>
+          <Button sx={{ display: 'flex', backgroundColor: '#d4d4d4', width: '6em', height: '2em', color: 'gray', borderRadius: '0.5em', marginLeft: '1em' }}></Button>
+          <Box sx={{ marginLeft: '1em', borderRadius: '50%', backgroundColor: 'gainsboro', p: 1 }}>{more}</Box>
+        </Box>
+      </React.Fragment>
+    )
+
+
+  }
+
+  const PostSkeleton = () => {
+    const fadeIn = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } })
+    const styles = {
+      skeleton: {
+
+        width: ['100%', '100%', '100%', '100%', '90%', '100%'],
+        backgroundColor: 'white',
+        borderRadius: '1em',
+        p: 3,
+        height: '12em'
+
+      }
+    }
+    return (
+
+      <Card sx={styles.skeleton} className="drop-shadow-lg">
+        <Box sx={{ width: '100%', top: 0, display: 'flex', animation: `${fadeIn} 2s backwards infinite` }}>
+
+          <Box sx={{ width: '100%', justifyContent: 'left', display: 'flex', gridTemplateColumns: 'auto auto', '&:div': { textAlign: 'center' } }}>
+            <div style={{ gridRow: '1/span 2', width: '46px', height: '46px', backgroundColor: 'lightgray', borderRadius: '50%' }}></div>
+            <Box sx={{ marginLeft: '1em' }}>
+              <Box sx={{ display: 'flex', width: '100%' }}>
+                <Box sx={{ width: '10em', borderRadius: '1em', backgroundColor: '#d2d2d2', height: '22px' }}></Box>
+                <Box sx={{ float: 'right' }}></Box>
+              </Box>
+
+              <Box sx={{ display: 'flex', height: '16px', width: '16em', backgroundColor: '#e4e4e7', borderRadius: '1em', mt: 1 }}></Box>
+            </Box>
+
+          </Box>
+          <Box sx={{ float: 'right' }}>{more}</Box>
+        </Box>
+        <Box sx={{ backgroundColor: 'gainsboro', width: '100%', height: '6em', borderRadius: '1em', mt: 1, animation: `${fadeIn} 2s backwards infinite` }}>
+        </Box>
+      </Card>
+    )
+  }
 
   return <Box sx={{ width: '100%', px: [0, 0, 0, 5, 5, 5] }}>
     <Card sx={styles.container} className='drop-shadow-lg'>
-      <Container sx={styles.picContainer}>
-        <Box sx={styles.pic}>
-          {user ? <ProfilePicHolder width={92} height={92} src={user.profilePic} /> : null}
-        </Box>
-        <Box sx={styles.userInfo}>
-          <Box sx={{ py: 4 }}>
-            <Box sx={styles.name}>{user ? user.firstName + ' ' + user.lastName : null}</Box>
-            <Box sx={styles.location}>
-              <Box sx={{display:'flex',alignItems:'center'}}>{home}</Box><Box sx={{ml:2}}>{user ? user.address.neighborhood + ' ' + user.address.district : null}</Box>
+      {user ? <React.Fragment>
+        <Container sx={styles.picContainer}>
+          <Box sx={styles.pic}>
+            {user ? <ProfilePicHolder width={92} height={92} src={user.profilePic} /> : null}
+          </Box>
+          <Box sx={styles.userInfo}>
+            <Box sx={{ py: 4 }}>
+              <Box sx={styles.name}>{user ? user.firstName + ' ' + user.lastName : null}</Box>
+              <Box sx={styles.location}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>{home}</Box><Box sx={{ ml: 2 }}>{user ? user.address.neighborhood + ' ' + user.address.district : null}</Box>
 
+              </Box>
             </Box>
           </Box>
+
+
+        </Container>
+        <Box sx={styles.buttons}>
+          <Button className='bg-teal-500 font-bold' sx={{ display: 'flex', opacity: 0.8, ':hover': { opacity: 1 }, borderRadius: '0.5em' }}>{addFriend}Add friend</Button>
+          <Button className='font-semibold' sx={{ display: 'flex', backgroundColor: 'gainsboro', color: 'gray', ':hover': { color: 'black' }, borderRadius: '0.5em', marginLeft: '1em' }}>Message</Button>
+          <Box sx={{ marginLeft: '1em', borderRadius: '50%', backgroundColor: 'gainsboro', p: 1 }}>{more}</Box>
         </Box>
-
-
-      </Container>
-      <Box sx={styles.buttons}>
-        <Button className='bg-teal-500 font-bold' sx={{ display: 'flex',opacity:0.8,':hover':{opacity:1}, borderRadius: '0.5em' }}>{addFriend}Add friend</Button>
-        <Button className='font-semibold' sx={{ display: 'flex',backgroundColor:'gainsboro',color:'gray',':hover':{color:'black'}, borderRadius: '0.5em', marginLeft: '1em' }}>Message</Button>
-        <Box sx={{marginLeft:'1em',borderRadius:'50%',backgroundColor:'gainsboro',p:1}}>{more}</Box> 
-      </Box>
+      </React.Fragment> : <UserInfoSkeleton />}
     </Card>
+    <br />
+    {user && posts ? <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic', display: 'flex', alignItems: 'center', opacity: 0.7, mb: 2 }}><Box sx={{ mr: 2 }}>{settings}</Box>{user.firstName + "'s posts:"} </Box> : null}
+
+    {user ? posts ? posts.map(({ _id, fullName, profilePic, text, image, commentsCount, location, date, likes, isLiked }, index) => (
+      <React.Fragment>
+        <li style={{ listStyle: 'none' }} key={index}><Post userId={userId} postId={_id} fullName={fullName} profilePic={profilePic} text={text} commentsCount={commentsCount} image={image} location={location} date={date} likes={likes} isLiked={isLiked} /></li>
+        <br />
+      </React.Fragment>
+    )) : <Box sx={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}><Box sx={{ display: 'flex', fontSize: '18px', mt: 4 }}>User has no posts.</Box></Box>:<PostSkeleton/>}
   </Box>
 }
 
@@ -97,7 +197,7 @@ const styles = {
     textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap',
   },
   location: {
-    display:'flex'
+    display: 'flex'
   }
 
 }

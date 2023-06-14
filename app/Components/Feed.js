@@ -18,7 +18,7 @@ function Feed() {
     const [posts, setPosts] = useState(null)
     const [loading, setLoading] = useState(true)
     const [fetchBetween, setFetchBetween] = useState({ from: 0, to: 10 })
-    const [hasMore,setHasMore] = useState(true)
+    const [hasMore, setHasMore] = useState(true)
 
     const { data: session, status } = useSession()
     if (status === "loading") {
@@ -30,7 +30,7 @@ function Feed() {
     const district = session.user.name.split(',')[5]
     useEffect(() => {
         const getPosts = async () => {
-           
+
             await fetch('/api/getFeed', {
                 method: 'POST', body: JSON.stringify({
                     location: neighborhood + ' ' + district,
@@ -38,7 +38,7 @@ function Feed() {
                     postsBetween: fetchBetween
                 })
             }).then(res => res.json().then(data => {
-                if(!data.hasMore){
+                if (!data.hasMore) {
                     setHasMore(false)
                 }
                 setPosts(data.posts);
@@ -57,7 +57,7 @@ function Feed() {
                 postsBetween: fetchBetween
             })
         }).then(res => res.json().then(data => {
-            if(!data.isLastPost){
+            if (!data.isLastPost) {
                 setHasMore(false)
             }
             const newPosts = posts.concat(data.posts);
@@ -109,16 +109,16 @@ function Feed() {
         <>
 
             {!loading ? posts.length > 0 ?
-                <InfiniteScroll style={{overflow:'hidden'}} dataLength={posts.length} 
-                next={fetchMorePosts} 
-                hasMore={hasMore} 
-                loader={<DotLoader color='#14B8A6' size={30} 
-                endMessage={
-                    <div>There are no other posts in your neighborhood.</div>
-                }/>}>
-                    {posts.map(({ _id, fullName, profilePic, text, image, commentsCount, location, date, likes, isLiked }, index) => (
+                <InfiniteScroll style={{ overflow: 'hidden' }} dataLength={posts.length}
+                    next={fetchMorePosts}
+                    hasMore={hasMore}
+                    loader={<DotLoader color='#14B8A6' size={30}
+                        endMessage={
+                            <div>There are no other posts in your neighborhood.</div>
+                        } />}>
+                    {posts.map(({ _id, fullName, profilePic, text, image, commentsCount, location, date, likes, isLiked, userName }, index) => (
                         <React.Fragment>
-                            <li style={{ listStyle: 'none' }} key={index}><Post userId={userId} postId={_id} fullName={fullName} profilePic={profilePic} text={text} commentsCount={commentsCount} image={image} location={location} date={date} likes={likes} isLiked={isLiked} /></li>
+                            <li style={{ listStyle: 'none' }} key={index}><Post userId={userId} postId={_id} fullName={fullName} profilePic={profilePic} text={text} commentsCount={commentsCount} image={image} location={location} date={date} likes={likes} isLiked={isLiked} userName={userName} /></li>
                             <br />
                         </React.Fragment>
                     ))}

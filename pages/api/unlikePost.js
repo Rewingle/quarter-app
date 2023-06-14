@@ -18,7 +18,7 @@ async function handler(req, res) {
             const unlikePost = await db.collection("posts").updateOne({_id: postId},{
                 $pull: { likes: userId }
             })
-            console.log(unlikePost)
+            //console.log(unlikePost)
             return res.status(200).json({ message: unlikePost })
         }
         return res.status(400).json({ message: 'no suitable data' })
