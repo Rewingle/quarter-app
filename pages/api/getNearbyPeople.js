@@ -6,8 +6,6 @@ export default async function handler(req, res) {
     if (req.method == 'POST') {
         const data = JSON.parse(req.body)
         
-        // location = address[{province},{district},{neighborhood}]
-
         if (data.address && data.userId) {
             const userId = new ObjectId(data.userId.toString())
             try {
@@ -20,7 +18,7 @@ export default async function handler(req, res) {
                 let usersWithFriendships = []
 
                 users.forEach((user)=>{
-                    console.log(user.friends)
+                    //console.log(user.friends)
                     if(user.friends.includes(data.userId)){
                         
                         usersWithFriendships.push({user,isFriend:true})
@@ -31,7 +29,7 @@ export default async function handler(req, res) {
                 }) 
                 //console.log(users)
                 //const filtered = users.map(()=>)
-                console.log(usersWithFriendships)
+                //console.log(usersWithFriendships)
                 res.send(usersWithFriendships)
                 //client.close()
             }

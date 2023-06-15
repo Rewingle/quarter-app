@@ -5,6 +5,7 @@ import DotLoader from 'react-spinners/DotLoader'
 import ProfilePicHolder from '../../../Components/ProfilePicHolder'
 import { Card, Box, Container, Button, Link } from 'theme-ui'
 import { keyframes } from '@emotion/react'
+import Post from '../../../Components/Post/Post'
 
 function page() {
 
@@ -88,6 +89,43 @@ function page() {
 
 
     }
+    const PostSkeleton = () => {
+        const fadeIn = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } })
+        const styles = {
+          skeleton: {
+    
+            width: ['100%', '100%', '100%', '100%', '90%', '100%'],
+            backgroundColor: 'white',
+            borderRadius: '1em',
+            p: 3,
+            height: '12em'
+    
+          }
+        }
+        return (
+    
+          <Card sx={styles.skeleton} className="drop-shadow-lg">
+            <Box sx={{ width: '100%', top: 0, display: 'flex', animation: `${fadeIn} 2s backwards infinite` }}>
+    
+              <Box sx={{ width: '100%', justifyContent: 'left', display: 'flex', gridTemplateColumns: 'auto auto', '&:div': { textAlign: 'center' } }}>
+                <div style={{ gridRow: '1/span 2', width: '46px', height: '46px', backgroundColor: 'lightgray', borderRadius: '50%' }}></div>
+                <Box sx={{ marginLeft: '1em' }}>
+                  <Box sx={{ display: 'flex', width: '100%' }}>
+                    <Box sx={{ width: '10em', borderRadius: '1em', backgroundColor: '#d2d2d2', height: '22px' }}></Box>
+                    <Box sx={{ float: 'right' }}></Box>
+                  </Box>
+    
+                  <Box sx={{ display: 'flex', height: '16px', width: '16em', backgroundColor: '#e4e4e7', borderRadius: '1em', mt: 1 }}></Box>
+                </Box>
+    
+              </Box>
+              <Box sx={{ float: 'right' }}>{more}</Box>
+            </Box>
+            <Box sx={{ backgroundColor: 'gainsboro', width: '100%', height: '6em', borderRadius: '1em', mt: 1, animation: `${fadeIn} 2s backwards infinite` }}>
+            </Box>
+          </Card>
+        )
+      }
 
     return (
         <Box sx={{ width: '100%', px: [0, 0, 0, 5, 5, 5] }}>
@@ -118,14 +156,14 @@ function page() {
             </Card>
             <Box>
                 <Card sx={styles.container}>
-                    <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic', display: 'flex', alignItems: 'center', opacity: 0.7, mb: 2 }}>Friends</Box>
-                    <Box className='drop-shadow-lg' sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', backgroundColor: 'white', borderRadius: '1em' }}>
+                    <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic', display: 'flex', alignItems: 'center', opacity: 0.7, mb: 2 }}>{friends?'Friends':'No Friends'}</Box>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', backgroundColor: 'white', borderRadius: '1em' }}>
                         {friends ? friends.map(({ firstName, lastName, userName, profilePic }, index) => (
                             <Box>
 
-                                <Box key={index} className='drop-shadow-lg' sx={{ p: 1, width: '120px', height: '120px', backgroundColor: 'white', borderRadius: '1em' }}>
+                                <Box key={index} className='drop-shadow-lg' sx={{ p: 1, width: '120px', height: '80px', backgroundColor: 'white', borderRadius: '1em' }}>
                                     <Box sx={{display:'flex',alignItems:'center',justifyContent:'center',width:'100%'}}><ProfilePicHolder src={profilePic} width={44} height={44} /></Box>
-                                    <Box sx={{textAlign:'center',textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap',':hover':{cursor:'pointer',textDecoration:'underline'}}}>{firstName + ' ' + lastName }</Box>
+                                    <Link href={'/user/'+userName}><Box sx={{textAlign:'center',textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap',':hover':{cursor:'pointer',textDecoration:'underline'}}}>{firstName + ' ' + lastName }</Box></Link>
                                 </Box>
                             </Box>
                         ))
@@ -137,6 +175,13 @@ function page() {
                     </Box>
                 </Card>
             </Box>
+            <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic', display: 'flex', alignItems: 'center', opacity: 0.7, mb: 2 }}>Activity</Box>
+            {user ? posts ? posts.map(({ _id, fullName, profilePic, text, image, commentsCount, location, date, likes, isLiked }, index) => (
+                <React.Fragment>
+                  <li style={{ listStyle: 'none' }} key={index}><Post userId={userId} postId={_id} fullName={fullName} profilePic={profilePic} text={text} commentsCount={commentsCount} image={image} location={location} date={date} likes={likes} isLiked={isLiked} /></li>
+                  <br />
+                </React.Fragment>
+              )) : <Box sx={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}><Box sx={{ display: 'flex', fontSize: '18px', mt: 4 }}>No recent Activity.</Box></Box>:<PostSkeleton/>}
         </Box>
     )
 }

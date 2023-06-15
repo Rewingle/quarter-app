@@ -18,15 +18,17 @@ export default async function handler(req, res) {
             const user = JSON.parse(JSON.stringify(response))
             let friends = []
             let friendsIds = []
+       
             user.friends.forEach(element => {
+                console.log(element)
                 const ObjectFriendId = new ObjectId(element.toString())
                 friendsIds.push(ObjectFriendId)
-                console.log('added')
+      
             });
   
            
             if(friendsIds.length>0){
-           
+       
                 const users = await db.collection('users').find({_id: {$in: friendsIds}}).project({_id:1,firstName:1,lastName:1,profilePic:1,userName:1}).toArray()
                 friends.push(users)
             }

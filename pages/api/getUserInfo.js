@@ -1,6 +1,6 @@
 //import { MongoClient } from 'mongodb';
 import { connectToDatabase } from '../../lib/mongo';
-import {  ObjectId } from 'mongodb';
+//import {  ObjectId } from 'mongodb';
 
 
 export default async function handler(req, res) {
@@ -11,10 +11,10 @@ export default async function handler(req, res) {
 
        
 
-        if (data.userId) {
+        if (data.userName) {
             const { db } = await connectToDatabase();
-            const userId = new ObjectId(data.userId.toString())
-            const response = await db.collection('users').findOne({ _id: userId })
+            //const userId = new ObjectId(data.userId.toString())
+            const response = await db.collection('users').findOne({ userName: data.userName })
             console.log(response)
             const user = JSON.parse(JSON.stringify(response))
 

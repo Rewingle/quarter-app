@@ -67,8 +67,8 @@ async function handler(req, res) {
             var i = 1
             while (1) {
                 console.log('found user with this first and last name')
-                uniqueUsername =  convertString((data.firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '') + i.toString()).toLowerCase())
-               
+                uniqueUsername = convertString((data.firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '') + i.toString()).toLowerCase())
+
                 const isUserNameExist = await db.collection('users').findOne({ userName: uniqueUsername })
                 if (!isUserNameExist) {
                     break
@@ -89,8 +89,11 @@ async function handler(req, res) {
                         province: data.address.province,
                         district: data.address.district,
                         neighborhood: data.address.neighborhood
-                    }
-
+                    },
+                    likedPosts: [],
+                    friends: [],
+                    tempFriends: [],
+                    notifications: []
 
                 }
             )
@@ -110,7 +113,11 @@ async function handler(req, res) {
                     province: data.address.province,
                     district: data.address.district,
                     neighborhood: data.address.neighborhood
-                }
+                },
+                likedPosts: [],
+                friends: [],
+                tempFriends: [],
+                notifications: []
 
 
             }
