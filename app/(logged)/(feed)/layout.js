@@ -1,13 +1,13 @@
 'use client'
 import Header from '../../Components/Header'
 import React from 'react'
-import { Box, Card, Container } from 'theme-ui'
+import { Box, Button, Card, Container } from 'theme-ui'
 import { useSession } from 'next-auth/react'
 import DotLoader from 'react-spinners/DotLoader'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import NearbyPeople from '../../Components/NearbyPeople'
-
+import Image from 'next/image'
 
 export default function LoggedLayout({ children }) {
 
@@ -87,13 +87,33 @@ export default function LoggedLayout({ children }) {
                     <Box sx={styles.rightBarContainer}>
                         <Container sx={styles.rightBarInner}>
                             <ul>
-                                <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'red', borderRadius: '8px' }}></Box></li>
+                                <li>
+                                    <Box sx={{ width: '300px', height: '200px', borderRadius: '8px', backgroundColor: 'white', position: 'relative' }} className='drop-shadow-lg'>
+                                        <Image src={'https://quarter-app.s3.eu-central-1.amazonaws.com/site-content/surveyno.jpg'} width={300} height={200} style={{ borderRadius: '8px' }}></Image>
+                                        <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: 5,color:'white',p:4,fontSize:'18px',fontWeight:600 }}>
+                                            <Box>Complete a quick survey </Box>
+                                            <Box>to help improve the </Box>
+                                            <Box>Quarter experience</Box>
+                                        </Box>
+                                        <Box sx={{ position: 'absolute', bottom: 0, left: 0, zIndex: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '300px' }}>
+                                            <Button sx={{ borderRadius: '2em', backgroundColor: 'white', color: 'black', fontWeight: 600, zIndex: 100, width: '10em', mb: 2 }} onClick={()=>{alert('Work in progress')}}>Start survey</Button>
+                                        </Box>
+
+                                    </Box>
+                                </li>
                                 <br />
-                                <li><Box sx={{ width: '300px', height: '200px', backgroundColor: 'purple', borderRadius: '8px' }}></Box></li>
-                                <br/>
-                                <Card sx={{borderRadius: '1em',backgroundColor:'white',py:2}} className="drop-shadow-lg">
-                                    <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic',p:2,textAlign:'center',mb:2 }}>People you may know</Box>
-                                    <NearbyPeople address={{ 'province': province, 'district': district, 'neighborhood': neighborhood }} userId={userId}/>
+                                <li>
+                                    <Box sx={{ width: '300px', height: '200px', borderRadius: '8px', backgroundColor: 'white', position: 'relative' }} className='drop-shadow-lg'>
+                                        <Image src={'https://quarter-app.s3.eu-central-1.amazonaws.com/site-content/banner2.jpg'} width={300} height={200} style={{ borderRadius: '8px' }}></Image>
+                                        <Box sx={{ position: 'absolute', width: '300px', height: '3.5em', opacity: 0.6, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 1, backgroundColor: '#292524', color: 'white', bottom: 0, left: 0, zIndex: 5, borderRadius: '0 0 8px 8px' }}>
+                                            <Link href={'/discover'}><Button sx={{ borderRadius: '2em', backgroundColor: '#7dd3fc', color: 'white', fontWeight: 600, zIndex: 100 }}>Workshops</Button></Link>
+                                        </Box>
+                                    </Box>
+                                </li>
+                                <br />
+                                <Card sx={{ borderRadius: '1em', backgroundColor: 'white', py: 2 }} className="drop-shadow-lg">
+                                    <Box sx={{ fontWeight: 600, fontSize: '22px', fontStyle: 'italic', p: 2, textAlign: 'center', mb: 2 }}>People you may know</Box>
+                                    <NearbyPeople address={{ 'province': province, 'district': district, 'neighborhood': neighborhood }} userId={userId} />
                                 </Card>
                             </ul>
 

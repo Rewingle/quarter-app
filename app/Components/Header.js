@@ -101,7 +101,7 @@ export default function Header() {
                                         </li>
                                     ))} */}
 
-                                        <Link href='/'><li ><a href=''>{homeIcon}</a></li></Link>
+                                        <Link href='/feed'><li ><a href=''>{homeIcon}</a></li></Link>
                                         <Link href='/discover'><li ><a href=''>{discover}</a></li></Link>
                                         <Link href='/notifications'><li ><a href=''>{notifications}</a></li></Link>
                                         <Link href='/message'><li ><a href=''>{messages}</a></li></Link>

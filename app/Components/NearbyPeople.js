@@ -13,6 +13,7 @@ function NearbyPeople(props) {
 
     const [people, setPeople] = useState(null)
     const [buttonType, setButtonType] = useState()
+    const [addFriendClicked,setAddFriendClicked] = useState(false)
 
     const addFriend = async (friendId) => {
         await fetch('/api/manageFriend', {
@@ -47,7 +48,7 @@ function NearbyPeople(props) {
                     </Box>
 
                     <Box sx={{ float: 'right', right: 0 }}>
-                        {!isFriend ? <Button onClick={() => { addFriend(user._id) }} sx={{ borderRadius: '2em', fontWeight: 600, height: '36px', justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '14px', float: 'right' }}>{add}ADD</Button>
+                        {!isFriend || !addFriendClicked ? <Button onClick={() => { addFriend(user._id) }} sx={{ borderRadius: '2em', fontWeight: 600, height: '36px', justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '14px', float: 'right' }}>{add}ADD</Button>
                             :
                             <Button onClick={() => { addFriend(user._id) }} sx={{ borderRadius: '2em', fontWeight: 600, height: '36px', justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '14px', float: 'right' }}>REMOVE</Button>
                         }
