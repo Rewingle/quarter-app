@@ -65,10 +65,10 @@ export default function LoggedLayout({ children }) {
                         <Box sx={{ marginTop: '6em' }}>
                             <ul style={styles.leftBarList}>
 
-                                <Box><Link href=""><li><div >{homeIcon}</div><span></span><div>Home</div></li></Link></Box>
-                                <Box><Link href=""><li><div >{bell}</div><span></span><div>Notifications</div></li></Link></Box>
-                                <Box><Link href=""><li><div >{message}</div><span></span><div>Messages</div></li></Link></Box>
-                                <Box><Link href=""><li><div >{store}</div><span></span><div>Business</div></li></Link></Box>
+                                <Box><Link href="/feed"><li><div >{homeIcon}</div><span></span><div>Home</div></li></Link></Box>
+                                <Box><Link href="/notifications"><li><div >{bell}</div><span></span><div>Notifications</div></li></Link></Box>
+                                <Box><Link href="/message"><li><div >{message}</div><span></span><div>Messages</div></li></Link></Box>
+                                <Box><Link href="/business"><li><div >{store}</div><span></span><div>Business</div></li></Link></Box>
                             </ul>
                         </Box>
                     </Box>

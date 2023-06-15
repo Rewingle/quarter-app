@@ -6,45 +6,77 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         const data = JSON.parse(req.body)
-      
+
         if (data.postId && data.commentsBetween) {
 
             if (data.commentsBetween == 1) {
-             
+
                 let joined = []
 
                 const { db } = await connectToDatabase();
 
                 const postId = new ObjectId(data.postId.toString())
 
-                await db.collection('posts').aggregate([{
-                    $match: {
-                        _id: postId
-                    },
-                }, {
-                    $project: {
-                        hasMore: { $gt: [{ $size: "$comments" }, 5] },
-                        comments: { $slice: ["$comments", { $subtract: [{ $size: "$comments" }, 5] }, { $size: "$comments" }] },
-                        _id: 0,
+                const comments = await db.collection('posts').find({ _id: postId }).project({ comments: 1 }).toArray()
+                console.log(comments)
+                if (comments.length < 6) {
+                    await db.collection('posts').aggregate([{
+                        $match: {
+                            _id: postId
+                        },
+                    }, {
+                        $project: {
+                            hasMore: { $gt: [{ $size: "$comments" }, 5] },
+                            comments: { $slice: ["$comments", 0, { $size: "$comments" }] },
+                            _id: 0,
 
-                    }
-                }]).forEach(async (post) => {
+                        }
+                    }]).forEach(async (post) => {
 
-                    const comments = post.comments
+                        const comments = post.comments
 
-                    for (const comment of comments) {
+                        for (const comment of comments) {
 
-                        await db.collection('users').findOne({ _id: comment.userId }).then((user) => {
+                            await db.collection('users').findOne({ _id: comment.userId }).then((user) => {
 
-                            joined.push({ fullName: user.firstName + ' ' + user.lastName, text: comment.text, profilePic: user.profilePic, date: comment.date, userName: comment.userName })
+                                joined.push({ fullName: user.firstName + ' ' + user.lastName, text: comment.text, profilePic: user.profilePic, date: comment.date, userName: comment.userName })
 
-                        }).catch((err) => res.status(404).json({ message: err }))
-                    }
-                    res.status(200).json({ comments: joined, hasMore: post.hasMore })
+                            }).catch((err) => res.status(404).json({ message: err }))
+                        }
+                        res.status(200).json({ comments: joined, hasMore: post.hasMore })
 
 
-                })
+                    })
+                }
+                else {
+                    await db.collection('posts').aggregate([{
+                        $match: {
+                            _id: postId
+                        },
+                    }, {
+                        $project: {
+                            hasMore: { $gt: [{ $size: "$comments" }, 5] },
+                            comments: { $slice: ["$comments", { $subtract: [{ $size: "$comments" }, 5] }, { $size: "$comments" }] },
+                            _id: 0,
 
+                        }
+                    }]).forEach(async (post) => {
+
+                        const comments = post.comments
+
+                        for (const comment of comments) {
+
+                            await db.collection('users').findOne({ _id: comment.userId }).then((user) => {
+
+                                joined.push({ fullName: user.firstName + ' ' + user.lastName, text: comment.text, profilePic: user.profilePic, date: comment.date, userName: comment.userName })
+
+                            }).catch((err) => res.status(404).json({ message: err }))
+                        }
+                        res.status(200).json({ comments: joined, hasMore: post.hasMore })
+
+
+                    })
+                }
             }
             else {
                 let joined = []
