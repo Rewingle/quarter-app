@@ -105,8 +105,8 @@ export default function LoggedLayout({ children }) {
                                 <li>
                                     <Box sx={{ width: '300px', height: '200px', borderRadius: '8px', backgroundColor: 'white', position: 'relative' }} className='drop-shadow-lg'>
                                         <Image src={'https://quarter-app.s3.eu-central-1.amazonaws.com/site-content/banner2.jpg'} width={300} height={200} style={{ borderRadius: '8px' }}></Image>
-                                        <Box sx={{ position: 'absolute', width: '300px', height: '3.5em', opacity: 0.6, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 1, backgroundColor: '#292524', color: 'white', bottom: 0, left: 0, zIndex: 5, borderRadius: '0 0 8px 8px' }}>
-                                            <Link href={'/discover'}><Button sx={{ borderRadius: '2em', backgroundColor: '#7dd3fc', color: 'white', fontWeight: 600, zIndex: 100 }}>Workshops</Button></Link>
+                                        <Box sx={{ position: 'absolute', width: '300px', height: '3.5em', opacity: 0.3, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 1, backgroundColor: '#292524', color: 'white', bottom: 0, left: 0, zIndex: 5, borderRadius: '0 0 8px 8px' }}>
+                                            <Link href={'/discover'}><Button sx={{ borderRadius: '2em', color: 'white', fontWeight: 600, zIndex: 100 }}>Workshops</Button></Link>
                                         </Box>
                                     </Box>
                                 </li>

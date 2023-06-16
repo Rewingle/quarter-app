@@ -55,7 +55,7 @@ async function handler(req, res) {
         
         */
         const firstName = data.firstName
-        const userName = (firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '')).toLowerCase()
+        const userName = convertString((data.firstName.replace(/\s/g, '') + data.lastName.replace(/\s/g, '')).toLowerCase())
         const character = firstName.substring(0, 1).toUpperCase()
 
         const { db } = await connectToDatabase();
